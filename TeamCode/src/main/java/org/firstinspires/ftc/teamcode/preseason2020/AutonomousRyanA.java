@@ -85,17 +85,17 @@ public class AutonomousRyanA extends OpMode
         // use this timer to track how much time since auto started
         timer.reset();
 
-        robot.motorFR.setPower(0.15);
-        robot.motorFL.setPower(-0.15);
-        robot.motorBR.setPower(-0.15);
-        robot.motorBL.setPower(0.15);
+        int startPosition = robot.motorBR.getCurrentPosition();
 
-        try {
-            Thread.sleep(500);
-        } catch (Exception e ) {
+        robot.motorFR.setPower(0.2);
+        robot.motorFL.setPower(0.2);
+        robot.motorBR.setPower(0.2);
+        robot.motorBL.setPower(0.2);
+
+        while(robot.motorBR.getCurrentPosition() - startPosition >= 500)
+        {
+            robot.stopAllMotors();
         }
-
-        robot.stopAllMotors();
     }
 
     /////////////////////////////////////////////////////////////////////////
