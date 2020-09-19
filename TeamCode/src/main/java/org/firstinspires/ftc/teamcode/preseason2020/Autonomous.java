@@ -92,6 +92,14 @@ public class Autonomous extends OpMode
         robot.motorFL.setPower(0.15);
         robot.motorBR.setPower(0.15);
         robot.motorBL.setPower(0.15);
+
+        try {
+        Thread.sleep(500);
+        } catch (Exception e ) {
+        }
+
+        robot.stopAllMotors();
+
     }
 
     /////////////////////////////////////////////////////////////////////////
