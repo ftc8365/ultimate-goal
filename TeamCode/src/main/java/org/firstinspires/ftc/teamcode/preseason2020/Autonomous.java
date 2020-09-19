@@ -88,10 +88,10 @@ public class Autonomous extends OpMode
         // use this timer to track how much time since auto started
         timer.reset();
 
-        robot.motorFR.setPower(0.15);
-        robot.motorFL.setPower(0.15);
-        robot.motorBR.setPower(0.15);
-        robot.motorBL.setPower(0.15);
+        robot.motorFR.setPower(-0.2);
+        robot.motorFL.setPower(-0.2);
+        robot.motorBR.setPower(-0.2);
+        robot.motorBL.setPower(-0.2);
 
         try {
         Thread.sleep(500);
