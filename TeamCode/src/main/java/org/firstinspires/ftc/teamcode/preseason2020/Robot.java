@@ -86,19 +86,19 @@ public class Robot {
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
 
         motorFR = (ExpansionHubMotor) hardwareMap.dcMotor.get("motorFR");
-        motorFR.setDirection(DcMotor.Direction.REVERSE);
+        motorFR.setDirection(DcMotor.Direction.FORWARD);
         motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorFL = (ExpansionHubMotor) hardwareMap.dcMotor.get("motorFL");
-        motorFL.setDirection(DcMotor.Direction.FORWARD);
+        motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorBR = (ExpansionHubMotor) hardwareMap.dcMotor.get("motorBR");
-        motorBR.setDirection(DcMotor.Direction.REVERSE);
+        motorBR.setDirection(DcMotor.Direction.FORWARD);
         motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorBL = (ExpansionHubMotor) hardwareMap.dcMotor.get("motorBL");
-        motorBL.setDirection(DcMotor.Direction.FORWARD);
+        motorBL.setDirection(DcMotor.Direction.REVERSE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
