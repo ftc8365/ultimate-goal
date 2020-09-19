@@ -87,15 +87,20 @@ public class AutonomousRyanA extends OpMode
 
         int startPosition = robot.motorBR.getCurrentPosition();
 
+        telemetry.addData("Start Position", robot.motorBR.getCurrentPosition());
+
         robot.motorFR.setPower(0.2);
         robot.motorFL.setPower(0.2);
         robot.motorBR.setPower(0.2);
         robot.motorBL.setPower(0.2);
 
-        while(robot.motorBR.getCurrentPosition() - startPosition >= 500)
+        while(robot.motorBR.getCurrentPosition() - startPosition < 500)
         {
-            robot.stopAllMotors();
+            telemetry.addData("Current Position", robot.motorBR.getCurrentPosition());
+            telemetry.update();
         }
+
+        robot.stopAllMotors();
     }
 
     /////////////////////////////////////////////////////////////////////////
