@@ -86,9 +86,16 @@ public class AutonomousRyanA extends OpMode
         timer.reset();
 
         robot.motorFR.setPower(0.15);
-        robot.motorFL.setPower(0.15);
-        robot.motorBR.setPower(0.15);
+        robot.motorFL.setPower(-0.15);
+        robot.motorBR.setPower(-0.15);
         robot.motorBL.setPower(0.15);
+
+        try {
+            Thread.sleep(500);
+        } catch (Exception e ) {
+        }
+
+        robot.stopAllMotors();
     }
 
     /////////////////////////////////////////////////////////////////////////
