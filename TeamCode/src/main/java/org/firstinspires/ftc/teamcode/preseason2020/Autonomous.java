@@ -89,8 +89,8 @@ public class Autonomous extends OpMode
         timer.reset();
 
         robot.motorFR.setPower(0.2);
-        robot.motorFL.setPower(-0.2);
-        robot.motorBR.setPower(-0.2);
+        robot.motorFL.setPower(0);
+        robot.motorBR.setPower(0);
         robot.motorBL.setPower(0.2);
 
         try {
