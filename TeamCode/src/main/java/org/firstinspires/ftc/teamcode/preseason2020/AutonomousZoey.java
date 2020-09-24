@@ -30,7 +30,8 @@
 package org.firstinspires.ftc.teamcode.preseason2020;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.ElapsedTime;import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 
 
 /**
@@ -46,7 +47,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AutonomousZoey", group="Test")
-//@Disabled
+@Disabled
 public class AutonomousZoey extends OpMode
 {
     private ElapsedTime timer = new ElapsedTime();
