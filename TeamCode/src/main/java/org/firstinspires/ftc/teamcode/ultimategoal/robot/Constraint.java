@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.ultimategoal.robot;
 public class Constraint {
 
     double initPower    = 0.25;
-    double targetPower  = 0.50;
+    double targetPower  = 0.40;
     boolean rampUp      = true;
     boolean rampDown    = true;
     boolean stopMotor   = false;

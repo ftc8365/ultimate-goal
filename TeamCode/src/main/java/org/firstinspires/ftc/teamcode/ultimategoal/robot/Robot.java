@@ -57,7 +57,7 @@ public class Robot {
     boolean runningAutonomous           = true;
     AllianceMode allianceMode           = AllianceMode.ALLIANCE_BLUE;
 
-    enum AllianceMode {
+    public enum AllianceMode {
         ALLIANCE_BLUE,
         ALLIANCE_RED
     }
@@ -295,6 +295,16 @@ public class Robot {
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // setDriveMotorPower
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void setDriveMotorPower(double powerFL, double powerFR, double powerBL, double powerBR) {
+        this.motorFL.setPower( powerFL );
+        this.motorFR.setPower( powerFR );
+        this.motorBL.setPower( powerBL );
+        this.motorBR.setPower( powerBR );
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // stopAllMotors
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void stopDriveMotors() {
@@ -458,8 +468,21 @@ public class Robot {
         }
     }
 
-    private int getCurrentDrivePosition() {
-        return motorFL.getCurrentPosition();
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private int getLeftOdometryPostion() {
+        return motorBR.getCurrentPosition();
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private int getRightOdometryPostion() {
+        return motorBR.getCurrentPosition();
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // getOdometryPosition
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private int getCenterOdometryPosition() {
+        return motorBL.getCurrentPosition();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -478,7 +501,7 @@ public class Robot {
     public void driveBackwardTillTicks( int ticks, double initPower, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors, int rampDownRange, int maxTime )
     {
         boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
-        int initPosition        = getCurrentDrivePosition();
+        int initPosition        = getLeftOdometryPostion();
         int ticksToGo           = 0;
         double power            = initPower;
         double startingTime     = 0;
@@ -487,7 +510,7 @@ public class Robot {
             startingTime = autonomusTimer.milliseconds();
 
         while (continueAutonomus()) {
-            ticksToGo = ticks - (initPosition - getCurrentDrivePosition());
+            ticksToGo = ticks - (initPosition - getLeftOdometryPostion());
             if (ticksToGo <= 0)
                 break;
 
@@ -574,12 +597,6 @@ public class Robot {
     }
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // getOdometryPosition
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    int getOdometryPosition() {
-        return motorBL.getCurrentPosition();
-    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // driveLeftTillDistance
@@ -596,13 +613,13 @@ public class Robot {
     public void driveLeftTillTicks( int ticks, double initPower, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors )
     {
         boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
-        int initPosition        = getOdometryPosition();
+        int initPosition        = getCenterOdometryPosition();
         int ticksToGo           = 0;
         double power            = initPower;
 
         while (continueAutonomus()) {
 
-            ticksToGo = ticks - (getOdometryPosition() - initPosition);
+            ticksToGo = ticks - (getCenterOdometryPosition() - initPosition);
 
             if (ticksToGo <= 0)
                 break;
@@ -653,13 +670,13 @@ public class Robot {
     public void driveRightTillTicks( int ticks, double initPower, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors )
     {
         boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
-        int initPosition        = getOdometryPosition();
+        int initPosition        = getCenterOdometryPosition();
         int ticksToGo           = 0;
         double power            = initPower;
 
         while (continueAutonomus()) {
 
-            ticksToGo = ticks - (initPosition - getOdometryPosition());
+            ticksToGo = ticks - (initPosition - getCenterOdometryPosition());
             if (ticksToGo <= 0)
                 break;
 
@@ -838,7 +855,7 @@ public class Robot {
 
         for (Movement movement : movements) {
             switch (movement.getType()) {
-                case FORWARD:
+                case MOVE_FORWARD:
                     this.driveForwardTillDistance( movement.getDistance(),
                                                     movement.getConstraint().getInitPower(),
                                                     movement.getConstraint().getTargetPower(),
@@ -846,7 +863,7 @@ public class Robot {
                                                     movement.getConstraint().getRampDown(),
                                                     movement.getConstraint().getStopMotor());
                     break;
-                case BACKWARD:
+                case MOVE_BACKWARD:
                     this.driveBackwardTillDistance( movement.getDistance(),
                                                     movement.getConstraint().getInitPower(),
                                                     movement.getConstraint().getTargetPower(),

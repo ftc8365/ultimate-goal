@@ -27,16 +27,17 @@ public class AutonomousRed extends LinearOpMode {
     public void runOpMode() {
 
         robot.setOpMode(this);
+        robot.setAllianceMode( Robot.AllianceMode.ALLIANCE_BLUE );
         robot.initDriveTrain();
 
         Trajectory trajectory = robot.trajectoryBuilder( )
-                .forward(12, 0, new Constraint())
-                .turnLeft(315, new Constraint())
-                .forward(12, 310, new Constraint())
-                .turnLeft(45, new Constraint())
-                .backward(12, 0, new Constraint())
+                .moveForward(12, 0 )
+                .moveBackward(12, 0 )
+                .turnLeft( 315 )
+                .moveForward(12, 315 )
+                .turnRight( 45 )
+                .moveBackward(12, 0 )
                 .build();
-
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
@@ -48,16 +49,9 @@ public class AutonomousRed extends LinearOpMode {
         // Start of program
         ///////////////////////////////////////
 
-
         robot.resetAutonomousTimer();
 
-
-//        drive.followTrajectory(trajectory);
-
-//        robot.driveForwardTillRotation(1.0, 0.5, 0.5, 90, false, false);
-
-
+        robot.followTrajectory(trajectory);
     }
-
 
 }

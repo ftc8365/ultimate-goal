@@ -97,9 +97,7 @@ public class DriverControl extends LinearOpMode {
         double turnStickXValue = gamepad1.right_stick_x;
         double turnStickYValue = gamepad1.right_stick_y;
 
-        int joystickPosition = 0;
-
-        joystickPosition = getJoystickPosition(driveStickXValue, driveStickYValue);
+        int joystickPosition = getJoystickPosition(driveStickXValue, driveStickYValue);
 
         double value = Math.max( Math.abs(driveStickYValue), Math.abs(driveStickXValue));
 

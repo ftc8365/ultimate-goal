@@ -4,8 +4,8 @@ import org.firstinspires.ftc.robotcore.external.Const;
 
 public class Movement {
     public enum Type {
-        FORWARD,
-        BACKWARD,
+        MOVE_FORWARD,
+        MOVE_BACKWARD,
         STRAFE_RIGHT,
         STRAFE_LEFT,
         TURN_RIGHT,
