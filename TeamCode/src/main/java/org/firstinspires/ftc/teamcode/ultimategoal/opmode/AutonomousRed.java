@@ -30,9 +30,11 @@ public class AutonomousRed extends LinearOpMode {
         robot.initDriveTrain();
 
         Trajectory trajectory = robot.trajectoryBuilder( )
-                .forward(24, 0, new Constraint())
-                .turnLeft(310, new Constraint())
+                .forward(12, 0, new Constraint())
+                .turnLeft(315, new Constraint())
                 .forward(12, 310, new Constraint())
+                .turnLeft(45, new Constraint())
+                .backward(12, 0, new Constraint())
                 .build();
 
 
