@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.ultimategoal.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.*;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous Sample", group="Autonomous")
@@ -15,7 +14,7 @@ public class AutonomousSample extends LinearOpMode {
 
     ElapsedTime timer = new ElapsedTime();
 
-    Robot robot = new Robot(this);
+    Robot robot = new Robot( this );
 
     @Override
     public void runOpMode() {

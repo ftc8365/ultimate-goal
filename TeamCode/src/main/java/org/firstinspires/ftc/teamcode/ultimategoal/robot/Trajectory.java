@@ -12,5 +12,4 @@ public class Trajectory {
     List< Movement > getMovements() {
         return this.movements;
     }
-
 }
