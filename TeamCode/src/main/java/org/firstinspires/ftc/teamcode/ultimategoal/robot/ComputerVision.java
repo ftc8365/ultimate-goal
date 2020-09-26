@@ -20,7 +20,7 @@ public class ComputerVision {
     private static final String VUFORIA_KEY =
             "AaaD61H/////AAABmfJ7OgkkWEWVmniO8RAqZ1cEkXF6bR9ebw4Gw+hUI8s1s5iTA9Hyri+sjoSO/ISwSWxfZCI/iAzZ0RxSQyGQ7xjWaoE4AJgn4pKLKVcOsuglHJQhjQevzdFKWX6cXq4xYL6vzwX7G7zuUP6Iw3/TzZIAj7OxYl49mA30JfoXvq/kKnhDOdM531dbRyZiaNwTGibRl5Dxd4urQ5av3EU1QyFBWR04eKWBrJGffk8bdqjAbB3QDp/7ZAMi2WfkItMOP5ghc5arNRCNt5x+xX7gSq8pMt3ZoC3XPfRNNaEbf24MgaNJXlUARsfAuycgPiY83jbX0Hrctj4wZ20wqah+FNYMqvySokw6/fDmyG0mPmel";
 
-    // TODO : Declare Vurforia & TensorFlow Variables
+    //   Declare Vurforia & TensorFlow Variables
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
@@ -35,7 +35,6 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO
     public void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -52,7 +51,6 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO
     public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -63,7 +61,6 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO
     public void activate() {
         if (tfod != null) {
             tfod.activate();
@@ -71,7 +68,6 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO
     public void detect() {
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
@@ -94,7 +90,6 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO
     public void shutdown() {
         if (tfod != null) {
             tfod.shutdown();
