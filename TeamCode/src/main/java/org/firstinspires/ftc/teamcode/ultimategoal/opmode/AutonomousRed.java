@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Trajectory;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Auto Red", group="Autonomous")
-@Disabled
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Autonomous")
+//@Disabled
 public class AutonomousRed extends LinearOpMode {
 
     //////////////////////////////////////////////////////////////////////
@@ -21,26 +21,44 @@ public class AutonomousRed extends LinearOpMode {
 
     ElapsedTime timer = new ElapsedTime();
 
-    Robot robot = new Robot();
+    Robot robot = new Robot(this);
 
     @Override
     public void runOpMode() {
-
-        robot.setOpMode(this);
-        robot.setAllianceMode( Robot.AllianceMode.ALLIANCE_BLUE );
         robot.initDriveTrain();
+        robot.initComputerVision();
 
         Trajectory trajectory = robot.trajectoryBuilder( )
-                .moveForward(12, 0 )
-                .moveBackward(12, 0 )
-                .turnLeft( 315 )
-                .moveForward(12, 315 )
-                .turnRight( 45 )
-                .moveBackward(12, 0 )
+//                .moveForward(12, 0 )
+                .moveBackward(6, 0 )
+//                .turnLeft( 315 )
+//                .moveForward(12, 315 )
+//                .turnRight( 45 )
+//                .moveBackward(12, 0 )
                 .build();
+
+        ElapsedTime timer = new ElapsedTime();
+        int count = 0;
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
+//            robot.motorBR.getCurrentPosition();
+//            robot.motorBL.getCurrentPosition();
+//            robot.motorFR.getCurrentPosition();
+
+//            robot.getInputData();
+//            robot.getLeftOdometryPostion();
+//            robot.getRightOdometryPostion();
+//            robot.getCenterOdometryPosition();
+
+            double ms = timer.milliseconds();
+
+            telemetry.addData( "timer", ms);
+            telemetry.addData( "count", count++ );
+            telemetry.addData( "rate",  count / ms );
+
+            robot.getComputerVision().detect();
+
             telemetry.addData(">", "Press Play to start");
             telemetry.update();
         }
@@ -52,6 +70,8 @@ public class AutonomousRed extends LinearOpMode {
         robot.resetAutonomousTimer();
 
         robot.followTrajectory(trajectory);
+
+        robot.shutdown();
     }
 
 }

@@ -73,7 +73,7 @@ public class PIDController {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // getDrivePower
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private double getDriveRangePower( double curPower, double range, double targetPower ) {
+    public double getDriveRangePower( double curPower, double range, double targetPower ) {
         double power = curPower;
 
         // Ramp down power
@@ -94,7 +94,7 @@ public class PIDController {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // getTurnPower
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private double getTurnPower( double curPower, double degreesToGo, double targetPower, boolean rampDown ) {
+    public double getTurnPower( double curPower, double degreesToGo, double targetPower, boolean rampDown ) {
         double power = curPower;
         double RAMP_DOWN_DISTANCE = 30;
 
@@ -110,4 +110,5 @@ public class PIDController {
         }
         return power;
     }
+
 }

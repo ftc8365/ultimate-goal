@@ -24,31 +24,25 @@ import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
 //@Disabled
 
 public class DriverControl extends LinearOpMode {
+    Robot robot = new Robot(this);
 
-    Robot robot = new Robot();
-
-    double DRIVE_NORMAL_POWER_RATIO = 1.00;
+//    double DRIVE_NORMAL_POWER_RATIO = 1.00;
+    double DRIVE_NORMAL_POWER_RATIO = 0.30;
     double DRIVE_LOW_POWER_RATIO    = 0.30;
-    double TURN_NORMAL_POWER_RATIO  = 0.75;
+//    double TURN_NORMAL_POWER_RATIO  = 0.75;
+    double TURN_NORMAL_POWER_RATIO  = 0.35;
     double TURN_LOW_POWER_RATIO     = 0.25;
 
     boolean driveNormalMode = true;
 
     @Override
     public void runOpMode() {
-        robot.setOpMode(this);
         robot.setRunningAutonomous(false);
         robot.initDriveTrain();
-
-        int initPos = robot.motorBR.getCurrentPosition();
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
             telemetry.addData(">", "Press Play to start");
-            telemetry.addData("init", initPos);
-            telemetry.addData("curr", robot.motorBR.getCurrentPosition());
-            telemetry.addData("diff", robot.motorBR.getCurrentPosition() - initPos);
-
             telemetry.addData("heading", robot.getCurrentPositionInDegrees());
             telemetry.addData("curheading", robot.getCurrentHeading());
 
@@ -195,11 +189,7 @@ public class DriverControl extends LinearOpMode {
             }
         }
 
-        robot.motorFR.setPower(motorFRPower);
-        robot.motorFL.setPower(motorFLPower);
-        robot.motorBR.setPower(motorBRPower);
-        robot.motorBL.setPower(motorBLPower);
-
+        robot.setDriveMotorPower(motorFRPower, motorFLPower, motorBRPower, motorBLPower);
     }
 
 
