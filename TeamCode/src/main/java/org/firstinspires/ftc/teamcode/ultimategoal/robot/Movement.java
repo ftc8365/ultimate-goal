@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.ultimategoal.robot;
 
-import org.firstinspires.ftc.robotcore.external.Const;
-
 public class Movement {
     public enum Type {
         MOVE_FORWARD,
@@ -17,7 +15,7 @@ public class Movement {
     private final double    distance;
     private final int       targetHeading;
 
-    private final Constraint constraint;
+    private  Constraint     constraint;
 
     Movement( Type type, double distance, int targetHeading, Constraint constraint ) {
         this.type           = type;

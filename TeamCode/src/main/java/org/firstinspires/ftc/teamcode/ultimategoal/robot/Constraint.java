@@ -55,5 +55,4 @@ public class Constraint {
         this.stopMotor = stopMotor;
         return this;
     }
-
 }

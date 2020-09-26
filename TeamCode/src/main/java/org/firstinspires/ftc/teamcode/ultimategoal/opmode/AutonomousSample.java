@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.ultimategoal.opmode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
-import org.firstinspires.ftc.teamcode.ultimategoal.robot.Trajectory;
-
+import org.firstinspires.ftc.teamcode.ultimategoal.robot.*;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous Sample", group="Autonomous")
 //@Disabled
@@ -24,7 +22,7 @@ public class AutonomousSample extends LinearOpMode {
         robot.initDriveTrain();
         robot.initComputerVision();
 
-        Trajectory trajectory = robot.trajectoryBuilder( )
+        Trajectory trajectory = robot.trajectoryBuilder()
                 .moveForward(12, 0 )
 //                .moveBackward(6, 0 )
 //                .turnLeft( 315 )

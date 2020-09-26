@@ -12,7 +12,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-
 public class ComputerVision {
     final Telemetry telemetry;
     final HardwareMap hardwareMap;
