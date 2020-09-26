@@ -1,19 +1,15 @@
 package org.firstinspires.ftc.teamcode.ultimategoal.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import org.firstinspires.ftc.teamcode.ultimategoal.robot.Constraint;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Trajectory;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Autonomous")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous Sample", group="Autonomous")
 //@Disabled
-public class AutonomousRed extends LinearOpMode {
+public class AutonomousSample extends LinearOpMode {
 
     //////////////////////////////////////////////////////////////////////
     // Declare OpMode members
@@ -29,8 +25,8 @@ public class AutonomousRed extends LinearOpMode {
         robot.initComputerVision();
 
         Trajectory trajectory = robot.trajectoryBuilder( )
-//                .moveForward(12, 0 )
-                .moveBackward(6, 0 )
+                .moveForward(12, 0 )
+//                .moveBackward(6, 0 )
 //                .turnLeft( 315 )
 //                .moveForward(12, 315 )
 //                .turnRight( 45 )
@@ -42,18 +38,9 @@ public class AutonomousRed extends LinearOpMode {
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
-//            robot.motorBR.getCurrentPosition();
-//            robot.motorBL.getCurrentPosition();
-//            robot.motorFR.getCurrentPosition();
-
-//            robot.getInputData();
-//            robot.getLeftOdometryPostion();
-//            robot.getRightOdometryPostion();
-//            robot.getCenterOdometryPosition();
 
             double ms = timer.milliseconds();
 
-            telemetry.addData( "timer", ms);
             telemetry.addData( "count", count++ );
             telemetry.addData( "rate",  count / ms );
 
