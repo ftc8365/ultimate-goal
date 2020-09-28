@@ -43,9 +43,6 @@ public class DriverControl extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
             telemetry.addData(">", "Press Play to start");
-            telemetry.addData("heading", robot.getCurrentPositionInDegrees());
-            telemetry.addData("curheading", robot.getCurrentHeading());
-
             telemetry.update();
         }
 
@@ -65,17 +62,6 @@ public class DriverControl extends LinearOpMode {
 
         double drivePowerRatio = this.DRIVE_NORMAL_POWER_RATIO;
         double turnPowerRatio  = this.TURN_NORMAL_POWER_RATIO;
-
-        if (gamepad1.x){
-            driveNormalMode = false;
-        }
-        else if (gamepad1.y){
-            driveNormalMode = true;
-        }
-
-        if (driveNormalMode == false){
-            drivePowerRatio = this.DRIVE_LOW_POWER_RATIO;
-        }
 
         if (gamepad1.left_stick_button) {
             drivePowerRatio = this.DRIVE_LOW_POWER_RATIO;
@@ -165,11 +151,11 @@ public class DriverControl extends LinearOpMode {
         motorBRPower = motorBRPower * drivePowerRatio;
         motorBLPower = motorBLPower * drivePowerRatio;
 
-        ////////////////////
+        ////////////////////////////////////////////////////////////
         // if the robot is moving forward or backward (pos 1 or 5)
         // and is turning, the robot will curve
         // otherwise, the robot will just turn
-        ////////////////////
+        ////////////////////////////////////////////////////////////
         if (Math.abs(turnStickXValue) > 0.1) {
 
             switch (joystickPosition) {
@@ -191,7 +177,6 @@ public class DriverControl extends LinearOpMode {
 
         robot.setDriveMotorPower(motorFRPower, motorFLPower, motorBRPower, motorBLPower);
     }
-
 
     int getJoystickPosition(double x, double y) {
 
