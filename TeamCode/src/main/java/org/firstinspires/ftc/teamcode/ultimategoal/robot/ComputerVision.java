@@ -27,6 +27,7 @@ public class ComputerVision {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
+    private static final String LABEL_NO_ELEMENT = "None";
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     public ComputerVision(OpMode opMode) {
@@ -68,6 +69,12 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO : detect() need to
+    //        - return a value (eg, String) that indicates the label of the object detected
+    //        - should return one of the following:
+    //        -   "quad"
+    //        -   "Single"
+    //        -   "None"
     public void detect() {
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since

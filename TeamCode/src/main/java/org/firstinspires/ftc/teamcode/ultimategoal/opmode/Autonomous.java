@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.ultimategoal.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.ultimategoal.robot.*;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous Sample", group="Autonomous")
+import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
+import org.firstinspires.ftc.teamcode.ultimategoal.robot.Trajectory;
+
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Autonomous")
 //@Disabled
-public class AutonomousSample extends LinearOpMode {
+public class Autonomous extends LinearOpMode {
 
     //////////////////////////////////////////////////////////////////////
     // Declare OpMode members
@@ -41,6 +43,12 @@ public class AutonomousSample extends LinearOpMode {
         while (inInitializationState()) {
             telemetry.addData("", "------------------------------");
 
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // TODO : detect() need to return a value (eg, String) that indicates the label of the object detected
+            //        - the method should return one of the following:
+            //        -   "quad"
+            //        -   "Single"
+            //        -   "None"
             robot.getComputerVision().detect();
 
             robot.clearBulkCache();
@@ -65,7 +73,6 @@ public class AutonomousSample extends LinearOpMode {
         robot.resetAutonomousTimer();
 
         if (opModeIsActive()) {
-
             robot.followTrajectory(trajectory);
         }
 
