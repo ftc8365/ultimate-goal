@@ -16,16 +16,21 @@ public class AutonomousSample extends LinearOpMode {
 
     Robot robot = new Robot( this );
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private boolean inInitializationState() {
+        return (!opModeIsActive() && !isStopRequested());
+    }
+
     @Override
     public void runOpMode() {
         robot.initDriveTrain();
         robot.initComputerVision();
 
         Trajectory trajectory = robot.trajectoryBuilder()
-//                .moveForward(20, 0 )
-//                .moveBackward(20, 0 )
-//                .turnLeft( 270 )
-//                .turnRight( 90 )
+                .moveForward(20, 0 )
+                .moveBackward(20, 0 )
+                .turnLeft( 270 )
+                .turnRight( 90 )
                 .strafeLeft(6,0)
                 .strafeRight(6,0)
                 .build();
@@ -33,29 +38,21 @@ public class AutonomousSample extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
         int count = 0;
 
-//        robot.getInputData();
-//        int initPos = robot.getRightOdometryPostion();
-
-
-        while (!opModeIsActive() && !isStopRequested()) {
+        while (inInitializationState()) {
             telemetry.addData("", "------------------------------");
 
-            double ms = timer.milliseconds();
-//            telemetry.addData( "count", count++ );
-            telemetry.addData( "rate",  ++count / ms );
+            robot.getComputerVision().detect();
 
-//            robot.getComputerVision().detect();
+            robot.clearBulkCache();
+            int rightPos = robot.getRightOdometryPosition();
+            int leftPos = robot.getLeftOdometryPosition();
+            int centerPos = robot.getCenterOdometryPosition();
 
-//            robot.getInputData();
-//            int currPos = robot.getRightOdometryPostion();
-//            int diff = currPos - initPos;
-//            double inches = (double)diff / robot.ODOMETRY_WHEEL_TICKS_PER_INCH; //  ( (double)diff/ 1440 ) * (1.49606 * Math.PI);
-
-//            telemetry.addData("init", initPos);
-//                       telemetry.addData("curr", currPos);
-//            telemetry.addData("diff", diff);
-//            telemetry.addData("dist", inches);
-//            telemetry.addData("ctr", robot.getCenterOdometryPosition());
+            telemetry.addData("right", rightPos);
+            telemetry.addData("left", leftPos);
+            telemetry.addData("ctr", centerPos);
+            telemetry.addData("gyro", robot.getCurrentHeading());
+            telemetry.addData( "rate/sec",  ++count / timer.seconds() );
 
             telemetry.addData(">", "Press Play to start");
             telemetry.update();
@@ -67,7 +64,10 @@ public class AutonomousSample extends LinearOpMode {
 
         robot.resetAutonomousTimer();
 
-        robot.followTrajectory(trajectory);
+        if (opModeIsActive()) {
+
+            robot.followTrajectory(trajectory);
+        }
 
         robot.shutdown();
     }
