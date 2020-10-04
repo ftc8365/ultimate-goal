@@ -31,7 +31,7 @@ public class Robot {
     public final double ODOMETRY_WHEEL_RADIUS              = 1.49606 / 2;  // Nexus Omni wheel is 38mm in diagram, convert to inches
     public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION  = 1440;                   // Based on E8T spec
     public final int    ODOMETRY_WHEEL_TICKS_PER_INCH      = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
-    public final double ODEMOTRY_WHEEL_DIAMETER            = 14.0;
+    public final double ODEMOTRY_WHEEL_DIAMETER            = 13.30;
 
     final int    AUTONOMOUS_DURATION_MSEC           = 29800;
 
@@ -54,6 +54,9 @@ public class Robot {
 //    ExpansionHubMotor   motorBL = null;
 
     double              curDrivePower  = 0;
+    int                 initRightOdometryPosition = 0;
+    int                 initLeftOdometryPosition = 0;
+    int                 initCenterOdometryPosition = 0;
 
     PIDController   pidController = new PIDController(ODOMETRY_WHEEL_TICKS_PER_ROTATION);
     KalmanFilter    kalmanFilter  = new KalmanFilter();
@@ -111,22 +114,22 @@ public class Robot {
         motorFR = opMode.hardwareMap.get(DcMotorEx.class, "motorFR");  // Configure the robot to use these 4 motor names,
         //motorFR = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.FORWARD);
-        motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorFL = opMode.hardwareMap.get(DcMotorEx.class, "motorFL");  // or change these strings to match your existing Robot Configuration.
         //motorFL = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.REVERSE);
-        motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorBR = opMode.hardwareMap.get(DcMotorEx.class, "motorBR");
         //motorBR = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
-        motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorBL = opMode.hardwareMap.get(DcMotorEx.class, "motorBL");
         //motorBL = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorBL");
         motorBL.setDirection(DcMotor.Direction.REVERSE);
-        motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Important Step 2: Get access to a list of Expansion Hub Modules to enable changing caching methods.
         List<LynxModule> allHubs = opMode.hardwareMap.getAll(LynxModule.class);
@@ -135,6 +138,11 @@ public class Robot {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
+        controlHub.clearBulkCache();
+        this.initLeftOdometryPosition = this.getLeftOdometryPosition();
+        this.initRightOdometryPosition = this.getRightOdometryPosition();
+        this.initCenterOdometryPosition = this.getCenterOdometryPosition();
+
         navxMicro = opMode.hardwareMap.get(NavxMicroNavigationSensor.class, "gyro_sensor");
         gyro = (IntegratingGyroscope) navxMicro;
 
@@ -142,6 +150,15 @@ public class Robot {
             opMode.sleep(50);
         }
     }
+
+    public void setDriveTrainZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
+
+        motorFR.setZeroPowerBehavior(behavior);
+        motorFL.setZeroPowerBehavior(behavior);
+        motorBR.setZeroPowerBehavior(behavior);
+        motorBL.setZeroPowerBehavior(behavior);
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void clearBulkCache() {
@@ -181,18 +198,22 @@ public class Robot {
 }
 
     public int getInitLeftOdometryPosition() {
-        return 0;
+        return this.initLeftOdometryPosition;
     }
 
     public int getInitRightOdometryPosition() {
-        return 0;
+        return this.initRightOdometryPosition;
+    }
+
+    public double getCurrentPositionInDegrees() {
+        return getCurrentPositionInDegreesUsingGyro();
     }
 
     // Using only motor encoders (via odometry), we can get rate of 300 cycles per second
     // adding gyro sensor, the rate reduce to 80 per second
     //
     // Excercise - figure out how to calculate robot heading based on
-    public double getCurrentPositionInDegrees() {
+    public double getCurrentPositionInDegreesUsingOdometry() {
         int left    = this.getLeftOdometryPosition() - getInitLeftOdometryPosition();
         int right   = this.getRightOdometryPosition() - getInitRightOdometryPosition();
         int diff    = right - left;
@@ -201,11 +222,13 @@ public class Robot {
 
         if (heading < 0)
             heading = 360 + heading;
+        else if (heading > 360)
+            heading = 360 - heading;
 
         return heading;
     }
 
-    public double getCurrentPositionInDegreesX() {
+    public double getCurrentPositionInDegreesUsingGyro() {
         double fromDegrees = getCurrentHeading();
 
         // degrees
@@ -275,8 +298,8 @@ public class Robot {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // driveForwardTillDistance
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void driveForwardTillDistance(double distanceInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors) {
-        driveForwardTillTicks((int) distanceInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors);
+    public void driveForwardTillDistance(double distanceInInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors) {
+        driveForwardTillTicks((int) distanceInInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -326,30 +349,22 @@ public class Robot {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // driveFBackwardTillDistance
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void driveBackwardTillDistance( double distanceInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
-        driveBackwardTillTicks( (int) distanceInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors, -1, -1);
+    public void driveBackwardTillDistance( double distanceInInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
+        driveBackwardTillTicks( (int) distanceInInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors );
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void driveBackwardTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors, int rampDownRange, int maxTime ) {
+    public void driveBackwardTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
         this.clearBulkCache();
 
         int initPosition        = getRightOdometryPosition();
         int ticksToGo           = 0;
         double startingTime     = 0;
 
-        if (maxTime > 0)
-            startingTime = autonomusTimer.milliseconds();
-
         while (continueAutonomus()) {
             ticksToGo = ticks - (initPosition - getRightOdometryPosition());
             if (ticksToGo <= 0)
                 break;
-
-            if (maxTime > 0) {
-                if ((autonomusTimer.milliseconds() - startingTime) > maxTime)
-                    break;
-            }
 
             this.curDrivePower = pidController.getDrivePower(this.curDrivePower, ticksToGo, targetPower, rampDown);
 
@@ -383,23 +398,22 @@ public class Robot {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // driveLeftTillDistance
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void driveLeftTillDistance( double distanceInInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
-        driveLeftTillTicks( (int) distanceInInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors );
+    public void strafeLeftTillDistance( double distanceInInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
+        strafeLeftTillTicks( (int) distanceInInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors );
     }
 
-    public void driveLeftTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
+    public void strafeLeftTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
         this.clearBulkCache();
 
-//        boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
         int initPosition        = getCenterOdometryPosition();
         int ticksToGo           = 0;
 
         while (continueAutonomus()) {
-            ticksToGo = ticks - (getCenterOdometryPosition() - initPosition);
+            ticksToGo = ticks - (initPosition - getCenterOdometryPosition());
             if (ticksToGo <= 0)
                 break;
 
-            this.curDrivePower = pidController.getSidewayDrivePower(this.curDrivePower, ticksToGo, targetPower, rampDown);
+            this.curDrivePower = pidController.getStrafeDrivePower(this.curDrivePower, ticksToGo, targetPower, rampDown);
 
             double powerFront = this.curDrivePower;
             double powerBack  = this.curDrivePower;
@@ -431,22 +445,22 @@ public class Robot {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // driveRightTillRotation
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void driveRightTillDistance( double distanceInInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
-        driveRightTillTicks( (int) distanceInInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors );
+    public void strafeRightTillDistance( double distanceInInches, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
+        strafeRightTillTicks( (int) distanceInInches * ODOMETRY_WHEEL_TICKS_PER_INCH, targetPower, targetHeading, rampDown, stopMotors );
     }
 
-    public void driveRightTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
+    public void strafeRightTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
         this.clearBulkCache();
 
         int initPosition        = getCenterOdometryPosition();
         int ticksToGo           = 0;
 
         while (continueAutonomus()) {
-            ticksToGo = ticks - (initPosition - getCenterOdometryPosition());
+            ticksToGo = ticks - (getCenterOdometryPosition() - initPosition);
             if (ticksToGo <= 0)
                 break;
 
-            this.curDrivePower = pidController.getSidewayDrivePower(this.curDrivePower, ticksToGo, targetPower, rampDown);
+            this.curDrivePower = pidController.getStrafeDrivePower(this.curDrivePower, ticksToGo, targetPower, rampDown);
 
             double powerFront = this.curDrivePower;
             double powerBack  = this.curDrivePower;
@@ -562,14 +576,14 @@ public class Robot {
                                                     movement.getConstraint().getStopMotor());
                     break;
                 case STRAFE_LEFT:
-                    this.driveLeftTillDistance( movement.getDistance(),
+                    this.strafeLeftTillDistance( movement.getDistance(),
                                                 movement.getConstraint().getTargetPower(),
                                                 movement.getTargetHeading(),
                                                 movement.getConstraint().getRampDown(),
                                                 movement.getConstraint().getStopMotor());
                     break;
                 case STRAFE_RIGHT:
-                    this.driveRightTillDistance( movement.getDistance(),
+                    this.strafeRightTillDistance( movement.getDistance(),
                                                     movement.getConstraint().getTargetPower(),
                                                     movement.getTargetHeading(),
                                                     movement.getConstraint().getRampDown(),

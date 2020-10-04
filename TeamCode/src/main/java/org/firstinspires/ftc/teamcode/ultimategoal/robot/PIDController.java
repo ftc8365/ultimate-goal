@@ -25,12 +25,12 @@ public class PIDController {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // getDrivePower
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public double getSidewayDrivePower( double curPower, double ticksToGo, double targetPower, boolean rampDown ) {
+    public double getStrafeDrivePower( double curPower, double ticksToGo, double targetPower, boolean rampDown ) {
         double power = curPower;
 
         // Ramp down power
         if ( rampDown && (ticksToGo <= this.ticksPerWheelRotation) ) {
-            power = ( ticksToGo / this.ticksPerWheelRotation )  * curPower;
+            power = ( ticksToGo / this.ticksPerWheelRotation )  * curPower * 0.5;
 
             if (power < MIN_STRAFE_POWER)
                 power = MIN_STRAFE_POWER;

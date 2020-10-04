@@ -25,6 +25,8 @@ public class Autonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        String ringPatten = "";
+
         robot.initDriveTrain();
         robot.initComputerVision();
 
@@ -43,7 +45,12 @@ public class Autonomous extends LinearOpMode {
         Trajectory trajectory2 = robot.trajectoryBuilder()
 //                .moveForward( 12, 0 )
 //                .moveBackward(12,0)
-                 .turnRight(90)
+//                 .turnLeft(270)
+//                .moveForward(20, 270)
+//                .turnRight(90)
+//                .moveForward(18, 90)
+                .strafeLeft(6, 0)
+                .strafeRight(6, 0)
                 .build();
 
         ElapsedTime timer = new ElapsedTime();
@@ -52,23 +59,13 @@ public class Autonomous extends LinearOpMode {
         while (inInitializationState()) {
             telemetry.addData("", "------------------------------");
 
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // TODO : detect() need to return a value (eg, String) that indicates the label of the object detected
-            //        - the method should return one of the following:
-            //        -   "quad"
-            //        -   "Single"
-            //        -   "None"
-//            robot.getComputerVision().detect();
+            //            robot.getComputerVision().detect();
 
             robot.clearBulkCache();
-            int rightPos = robot.getRightOdometryPosition();
-            int leftPos = robot.getLeftOdometryPosition();
-            int centerPos = robot.getCenterOdometryPosition();
+            telemetry.addData("ctr",   robot.getCenterOdometryPosition());
+            telemetry.addData("odom",   robot.getCurrentPositionInDegreesUsingOdometry() );
+            telemetry.addData("gyro",   robot.getCurrentPositionInDegreesUsingGyro());
 
-            telemetry.addData("right", rightPos);
-            telemetry.addData("left", leftPos);
-            telemetry.addData("ctr", centerPos);
-            telemetry.addData("gyro", robot.getCurrentHeading());
             telemetry.addData( "rate/sec",  ++count / timer.seconds() );
 
             telemetry.addData(">", "Press Play to start");
@@ -80,16 +77,13 @@ public class Autonomous extends LinearOpMode {
         ///////////////////////////////////////
 
         robot.resetAutonomousTimer();
-        robot.clearBulkCache();
-        int rightInit = robot.getRightOdometryPosition();
-        int leftInit = robot.getLeftOdometryPosition();
-        int centerInit = robot.getCenterOdometryPosition();
 
         if (opModeIsActive()) {
             robot.followTrajectory(trajectory2);
         }
 
         robot.clearBulkCache();
+/*
         int rightPos = robot.getRightOdometryPosition();
         int leftPos = robot.getLeftOdometryPosition();
         int centerPos = robot.getCenterOdometryPosition();
@@ -100,16 +94,14 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.addData("curr_right", rightPos);
         telemetry.addData("curr_left", leftPos);
-        telemetry.addData("curr_ctr", centerPos);
+        telemetry.addData("curr_ctr", centerPos); */
 
         robot.clearBulkCache();
-        telemetry.addData("odom", robot.getCurrentPositionInDegrees());
-        telemetry.addData("gyro", robot.getCurrentPositionInDegreesX());
-
-        telemetry.addData(">", "Press Play to start");
+        telemetry.addData("odom", robot.getCurrentPositionInDegreesUsingOdometry());
+        telemetry.addData("gyro", robot.getCurrentPositionInDegreesUsingGyro());
         telemetry.update();
 
-        sleep(100000);
+        sleep(1000000);
         robot.shutdown();
     }
 
