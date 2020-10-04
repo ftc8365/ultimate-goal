@@ -75,7 +75,8 @@ public class ComputerVision {
     //        -   "quad"
     //        -   "Single"
     //        -   "None"
-    public void detect() {
+    public String detect() {
+        String value = "None";
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
@@ -88,9 +89,11 @@ public class ComputerVision {
                     telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                     telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f", recognition.getLeft(), recognition.getTop());
                     telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f", recognition.getRight(), recognition.getBottom());
+                    value = recognition.getLabel();
                 }
             }
         }
+        return value;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////

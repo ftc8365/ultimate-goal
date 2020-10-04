@@ -9,7 +9,7 @@ public class PIDController {
     final double RAMP_DOWN_TURN_DEGREES = 30;
 
     final double MIN_DRIVE_POWER        = 0.10;
-    final double MIN_TURN_POWER         = 0.35;
+    final double MIN_TURN_POWER         = 0.20;
     final double MIN_STRAFE_POWER       = 0.30;
     final double TURN_POWER             = 0.70;
     final double TURN_TOLERANCE         = 5.0;
@@ -97,7 +97,7 @@ public class PIDController {
 
         // Ramp down power
         if ( rampDown && (degreesToGo <= RAMP_DOWN_DISTANCE) ) {
-            power = ( degreesToGo / RAMP_DOWN_DISTANCE)  * curPower;
+            power = ( degreesToGo / RAMP_DOWN_DISTANCE)  * curPower * 0.5;
 
             if (power < MIN_TURN_POWER)
                 power = MIN_TURN_POWER;

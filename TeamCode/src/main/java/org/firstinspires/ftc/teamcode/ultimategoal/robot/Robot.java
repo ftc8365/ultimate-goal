@@ -28,9 +28,10 @@ public class Robot {
     // Declare constants
     //////////////////////////////////////////////////////////////////////
 
-    final double ODOMETRY_WHEEL_RADIUS              = 1.49606 / 2;  // Nexus Omni wheel is 38mm in diagram, convert to inches
-    final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION  = 1440;                   // Based on E8T spec
-    final int    ODOMETRY_WHEEL_TICKS_PER_INCH      = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
+    public final double ODOMETRY_WHEEL_RADIUS              = 1.49606 / 2;  // Nexus Omni wheel is 38mm in diagram, convert to inches
+    public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION  = 1440;                   // Based on E8T spec
+    public final int    ODOMETRY_WHEEL_TICKS_PER_INCH      = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
+    public final double ODEMOTRY_WHEEL_DIAMETER            = 14.0;
 
     final int    AUTONOMOUS_DURATION_MSEC           = 29800;
 
@@ -110,22 +111,22 @@ public class Robot {
         motorFR = opMode.hardwareMap.get(DcMotorEx.class, "motorFR");  // Configure the robot to use these 4 motor names,
         //motorFR = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.FORWARD);
-        motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         motorFL = opMode.hardwareMap.get(DcMotorEx.class, "motorFL");  // or change these strings to match your existing Robot Configuration.
         //motorFL = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.REVERSE);
-        motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         motorBR = opMode.hardwareMap.get(DcMotorEx.class, "motorBR");
         //motorBR = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
-        motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         motorBL = opMode.hardwareMap.get(DcMotorEx.class, "motorBL");
         //motorBL = (ExpansionHubMotor) opMode.hardwareMap.dcMotor.get("motorBL");
         motorBL.setDirection(DcMotor.Direction.REVERSE);
-        motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Important Step 2: Get access to a list of Expansion Hub Modules to enable changing caching methods.
         List<LynxModule> allHubs = opMode.hardwareMap.getAll(LynxModule.class);
@@ -177,17 +178,34 @@ public class Robot {
         Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+}
+
+    public int getInitLeftOdometryPosition() {
+        return 0;
+    }
+
+    public int getInitRightOdometryPosition() {
+        return 0;
     }
 
     // Using only motor encoders (via odometry), we can get rate of 300 cycles per second
     // adding gyro sensor, the rate reduce to 80 per second
     //
     // Excercise - figure out how to calculate robot heading based on
-    public double getCurrentHeadingUsingOdometry() {
-        return 0.0;
+    public double getCurrentPositionInDegrees() {
+        int left    = this.getLeftOdometryPosition() - getInitLeftOdometryPosition();
+        int right   = this.getRightOdometryPosition() - getInitRightOdometryPosition();
+        int diff    = right - left;
+
+        double heading =  -180 * diff / ( ODEMOTRY_WHEEL_DIAMETER * Math.PI * ODOMETRY_WHEEL_TICKS_PER_INCH ) ;
+
+        if (heading < 0)
+            heading = 360 + heading;
+
+        return heading;
     }
 
-    public double getCurrentPositionInDegrees() {
+    public double getCurrentPositionInDegreesX() {
         double fromDegrees = getCurrentHeading();
 
         // degrees
@@ -245,7 +263,7 @@ public class Robot {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public int getLeftOdometryPosition() {
         //return bulkData.getMotorCurrentPosition(0);
-        return motorFR.getCurrentPosition();
+        return motorFR.getCurrentPosition() * -1;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +271,6 @@ public class Robot {
         //return bulkData.getMotorCurrentPosition(3);
         return motorBL.getCurrentPosition();
     }
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // driveForwardTillDistance
@@ -267,7 +284,7 @@ public class Robot {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void driveForwardTillTicks(int targetTicks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors) {
         clearBulkCache();
-        boolean useGyroToAlign = (this.gyro != null && targetHeading >= 0) ? true : false;
+//        boolean useGyroToAlign = (this.gyro != null && targetHeading >= 0) ? true : false;
         int initPosition = getRightOdometryPosition();
 
         while (continueAutonomus()) {
@@ -283,17 +300,15 @@ public class Robot {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            if (useGyroToAlign) {
-                double currentPosition = this.getCurrentPositionInDegrees();
-                double headingChange = currentPosition - targetHeading;
+            double currentPosition = this.getCurrentPositionInDegrees();
+            double headingChange = currentPosition - targetHeading;
 
-                if (headingChange > 180 && targetHeading <= 30) {
-                    headingChange -= 360;
-                }
-
-                powerRight += 2 * (headingChange / 100);
-                powerLeft -= 2 * (headingChange / 100);
+            if (headingChange > 180 && targetHeading <= 30) {
+                headingChange -= 360;
             }
+
+            powerRight += 2 * (headingChange / 100);
+            powerLeft -= 2 * (headingChange / 100);
 
             motorFR.setPower(powerRight);
             motorFL.setPower(powerLeft);
@@ -319,7 +334,6 @@ public class Robot {
     public void driveBackwardTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors, int rampDownRange, int maxTime ) {
         this.clearBulkCache();
 
-        boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
         int initPosition        = getRightOdometryPosition();
         int ticksToGo           = 0;
         double startingTime     = 0;
@@ -344,17 +358,14 @@ public class Robot {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            if (useGyroToAlign) {
-                double currentPosition = this.getCurrentPositionInDegrees();
-                double headingChange   = currentPosition - targetHeading;
+            double currentPosition = this.getCurrentPositionInDegrees();
+            double headingChange   = currentPosition - targetHeading;
 
-                if (headingChange > 180 && targetHeading == 0) {
-                    headingChange -= 360;
-                }
-                powerRight -=  2 * (headingChange / 100);
-                powerLeft  +=  2 * (headingChange / 100);
-
+            if (headingChange > 180 && targetHeading == 0) {
+                headingChange -= 360;
             }
+            powerRight -=  2 * (headingChange / 100);
+            powerLeft  +=  2 * (headingChange / 100);
 
             motorFR.setPower( powerRight * -1);
             motorFL.setPower( powerLeft * -1);
@@ -379,7 +390,7 @@ public class Robot {
     public void driveLeftTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
         this.clearBulkCache();
 
-        boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
+//        boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
         int initPosition        = getCenterOdometryPosition();
         int ticksToGo           = 0;
 
@@ -395,16 +406,14 @@ public class Robot {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            if (useGyroToAlign) {
-                double currentPosition = this.getCurrentPositionInDegrees();
-                double headingChange   = currentPosition - targetHeading;
+            double currentPosition = this.getCurrentPositionInDegrees();
+            double headingChange   = currentPosition - targetHeading;
 
-                if (headingChange > 180 && targetHeading == 0) {
-                    headingChange -= 360;
-                }
-                powerFront +=  2 * (headingChange / 100);
-                powerBack  -=  2 * (headingChange / 100);
+            if (headingChange > 180 && targetHeading == 0) {
+                headingChange -= 360;
             }
+            powerFront +=  2 * (headingChange / 100);
+            powerBack  -=  2 * (headingChange / 100);
 
             motorFR.setPower( powerFront );
             motorFL.setPower( powerFront * -1 );
@@ -419,8 +428,6 @@ public class Robot {
         }
     }
 
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // driveRightTillRotation
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -430,7 +437,7 @@ public class Robot {
 
     public void driveRightTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
         this.clearBulkCache();
-        boolean useGyroToAlign  = (this.gyro != null && targetHeading >= 0) ? true : false;
+
         int initPosition        = getCenterOdometryPosition();
         int ticksToGo           = 0;
 
@@ -446,16 +453,14 @@ public class Robot {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            if (useGyroToAlign) {
-                double currentPosition = this.getCurrentPositionInDegrees();
-                double headingChange   = currentPosition - targetHeading;
+            double currentPosition = this.getCurrentPositionInDegrees();
+            double headingChange   = currentPosition - targetHeading;
 
-                if (headingChange > 180 && targetHeading == 0) {
-                    headingChange -= 360;
-                }
-                powerFront -=  2 * (headingChange / 100);
-                powerBack  +=  2 * (headingChange / 100);
+            if (headingChange > 180 && targetHeading == 0) {
+                headingChange -= 360;
             }
+            powerFront -=  2 * (headingChange / 100);
+            powerBack  +=  2 * (headingChange / 100);
 
             motorFR.setPower( powerFront * -1 );
             motorFL.setPower( powerFront );
@@ -474,9 +479,9 @@ public class Robot {
     // turnRightTillDegrees
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void turnRightTillDegrees( int targetDegrees, double targetPower, boolean rampDown, boolean stopMotors ) {
-        double currentHeading = 0;
-        double degressToGo = 0;
-        double TURN_TOLERANCE = 5.0;
+        double currentHeading   = 0;
+        double degressToGo      = 0;
+        double TURN_TOLERANCE   = 5.0;
 
         while (continueAutonomus()) {
             this.clearBulkCache();

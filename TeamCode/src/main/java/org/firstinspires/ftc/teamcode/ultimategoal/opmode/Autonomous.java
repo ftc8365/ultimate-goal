@@ -29,12 +29,21 @@ public class Autonomous extends LinearOpMode {
         robot.initComputerVision();
 
         Trajectory trajectory = robot.trajectoryBuilder()
-                .moveForward(20, 0 )
-                .moveBackward(20, 0 )
+                .moveForward(54, 0 )
                 .turnLeft( 270 )
+                .moveForward(28, 270 )
+                .turnLeft( 180 )
+                .moveForward(28, 180 )
+                .turnLeft( 5 )
+                .moveForward(28, 0 )
                 .turnRight( 90 )
-                .strafeLeft(6,0)
-                .strafeRight(6,0)
+                .moveForward(24, 90 )
+                .build();
+
+        Trajectory trajectory2 = robot.trajectoryBuilder()
+//                .moveForward( 12, 0 )
+//                .moveBackward(12,0)
+                 .turnRight(90)
                 .build();
 
         ElapsedTime timer = new ElapsedTime();
@@ -49,7 +58,7 @@ public class Autonomous extends LinearOpMode {
             //        -   "quad"
             //        -   "Single"
             //        -   "None"
-            robot.getComputerVision().detect();
+//            robot.getComputerVision().detect();
 
             robot.clearBulkCache();
             int rightPos = robot.getRightOdometryPosition();
@@ -71,11 +80,36 @@ public class Autonomous extends LinearOpMode {
         ///////////////////////////////////////
 
         robot.resetAutonomousTimer();
+        robot.clearBulkCache();
+        int rightInit = robot.getRightOdometryPosition();
+        int leftInit = robot.getLeftOdometryPosition();
+        int centerInit = robot.getCenterOdometryPosition();
 
         if (opModeIsActive()) {
-            robot.followTrajectory(trajectory);
+            robot.followTrajectory(trajectory2);
         }
 
+        robot.clearBulkCache();
+        int rightPos = robot.getRightOdometryPosition();
+        int leftPos = robot.getLeftOdometryPosition();
+        int centerPos = robot.getCenterOdometryPosition();
+
+        telemetry.addData("init_right", rightInit);
+        telemetry.addData("init_left", leftInit);
+        telemetry.addData("init_ctr", centerInit);
+
+        telemetry.addData("curr_right", rightPos);
+        telemetry.addData("curr_left", leftPos);
+        telemetry.addData("curr_ctr", centerPos);
+
+        robot.clearBulkCache();
+        telemetry.addData("odom", robot.getCurrentPositionInDegrees());
+        telemetry.addData("gyro", robot.getCurrentPositionInDegreesX());
+
+        telemetry.addData(">", "Press Play to start");
+        telemetry.update();
+
+        sleep(100000);
         robot.shutdown();
     }
 
