@@ -218,14 +218,7 @@ public class Robot {
         int right   = this.getRightOdometryPosition() - getInitRightOdometryPosition();
         int diff    = right - left;
 
-        double heading =  -180 * diff / ( ODEMOTRY_WHEEL_DIAMETER * Math.PI * ODOMETRY_WHEEL_TICKS_PER_INCH ) ;
-
-        if (heading < 0)
-            heading = 360 + heading;
-        else if (heading > 360)
-            heading = 360 - heading;
-
-        return heading;
+        return 0;
     }
 
     public double getCurrentPositionInDegreesUsingGyro() {
