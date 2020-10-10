@@ -32,15 +32,15 @@ public class Autonomous extends LinearOpMode {
         robot.initComputerVision();
 
         Trajectory trajectory = robot.trajectoryBuilder()
-                .moveForward(54 )
+                .moveForward( 54 )
                 .turnLeft( 270 )
-                .moveForward(28 )
+                .moveForward( 28 )
                 .turnLeft( 180 )
-                .moveForward(28 )
+                .moveForward( 28 )
                 .turnLeft( 0 )
-                .moveForward(28 )
+                .moveForward( 28 )
                 .turnRight( 90 )
-                .moveForward(24 )
+                .moveForward( 24 )
                 .build();
 
         Trajectory trajectory2 = robot.trajectoryBuilder()
