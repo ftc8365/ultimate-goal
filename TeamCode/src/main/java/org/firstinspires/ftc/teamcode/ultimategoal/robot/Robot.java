@@ -216,18 +216,15 @@ public class Robot {
     public double getCurrentPositionInDegreesUsingOdometry() {
         int left    = this.getLeftOdometryPosition() - getInitLeftOdometryPosition();
         int right   = this.getRightOdometryPosition() - getInitRightOdometryPosition();
-        int diff    = right - left;
+        int diff    = left - right;
 
-        double heading = 0;
+        double heading = 180 * diff/(ODOMETRY_WHEEL_TICKS_PER_INCH*(ODOMETRY_WHEEL_DIAMETER*Math.PI));
 
-        // TODO - calculation here
-        heading = diff/(ODOMETRY_WHEEL_TICKS_PER_INCH*(ODOMETRY_WHEEL_DIAMETER*Math.PI));
-        // TODO - handle when heading < 0 and heading > 360
         if (heading < 0){
             heading = 360 + heading;
         }
         if (heading > 360){
-           heading = heading%360;
+           heading = heading % 360;
         }
         return heading;
     }

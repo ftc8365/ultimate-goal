@@ -70,11 +70,12 @@ public class Autonomous extends LinearOpMode {
             //            robot.getComputerVision().detect();
 
             robot.clearBulkCache();
-            telemetry.addData("ctr",   robot.getCenterOdometryPosition());
+            telemetry.addData("left",   robot.getLeftOdometryPosition());
+            telemetry.addData("right",  robot.getRightOdometryPosition());
             telemetry.addData("odom",   robot.getCurrentPositionInDegreesUsingOdometry() );
             telemetry.addData("gyro",   robot.getCurrentPositionInDegreesUsingGyro());
 
-            telemetry.addData( "rate/sec",  ++count / timer.seconds() );
+//            telemetry.addData( "rate/sec",  ++count / timer.seconds() );
 
             telemetry.addData(">", "Press Play to start");
             telemetry.update();
