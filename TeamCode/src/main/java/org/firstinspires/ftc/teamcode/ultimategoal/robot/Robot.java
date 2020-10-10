@@ -31,7 +31,7 @@ public class Robot {
     public final double ODOMETRY_WHEEL_RADIUS              = 1.49606 / 2;  // Nexus Omni wheel is 38mm in diagram, convert to inches
     public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION  = 1440;                   // Based on E8T spec
     public final int    ODOMETRY_WHEEL_TICKS_PER_INCH      = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
-    public final double ODEMOTRY_WHEEL_DIAMETER            = 13.30;
+    public final double ODOMETRY_WHEEL_DIAMETER            = 13.30;
 
     final int    AUTONOMOUS_DURATION_MSEC           = 29800;
 
@@ -221,7 +221,7 @@ public class Robot {
         double heading = 0;
 
         // TODO - calculation here
-        heading = diff/(ODOMETRY_WHEEL_TICKS_PER_INCH*ODOMETRY_WHEEL_TICKS_PER_ROTATION);
+        heading = diff/(ODOMETRY_WHEEL_TICKS_PER_INCH*(ODOMETRY_WHEEL_DIAMETER*Math.PI));
         // TODO - handle when heading < 0 and heading > 360
         if (heading < 0){
             heading = 360 + heading;
