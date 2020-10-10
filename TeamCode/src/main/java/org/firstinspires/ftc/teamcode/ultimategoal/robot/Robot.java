@@ -221,9 +221,14 @@ public class Robot {
         double heading = 0;
 
         // TODO - calculation here
-        heading = diff/(ODOMETRY_WHEEL_TICKS_PER_INCH*ODOMETRY_WHEEL_TICKS_PER_ROTATION)
+        heading = diff/(ODOMETRY_WHEEL_TICKS_PER_INCH*ODOMETRY_WHEEL_TICKS_PER_ROTATION);
         // TODO - handle when heading < 0 and heading > 360
-
+        if (heading < 0){
+            heading = 360 + heading;
+        }
+        if (heading > 360){
+           heading = heading%360;
+        }
         return heading;
     }
 
