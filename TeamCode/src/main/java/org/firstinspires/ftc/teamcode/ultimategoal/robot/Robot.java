@@ -206,7 +206,7 @@ public class Robot {
     }
 
     public double getCurrentPositionInDegrees() {
-        return getCurrentPositionInDegreesUsingGyro();
+        return getCurrentPositionInDegreesUsingOdometry();
     }
 
     // Using only motor encoders (via odometry), we can get rate of 300 cycles per second
@@ -218,7 +218,13 @@ public class Robot {
         int right   = this.getRightOdometryPosition() - getInitRightOdometryPosition();
         int diff    = right - left;
 
-        return 0;
+        double heading = 0;
+
+        // TODO - calculation here
+
+        // TODO - handle when heading < 0 and heading > 360
+
+        return heading;
     }
 
     public double getCurrentPositionInDegreesUsingGyro() {
@@ -552,44 +558,48 @@ public class Robot {
     public void followTrajectory( Trajectory trajectory ) {
         List< Movement > movements = trajectory.getMovements();
 
+        int targetHeading = 0;
+
         for (Movement movement : movements) {
             switch (movement.getType()) {
                 case MOVE_FORWARD:
                     this.driveForwardTillDistance( movement.getDistance(),
                                                     movement.getConstraint().getTargetPower(),
-                                                    movement.getTargetHeading(),
+                                                    targetHeading,
                                                     movement.getConstraint().getRampDown(),
                                                     movement.getConstraint().getStopMotor());
                     break;
                 case MOVE_BACKWARD:
                     this.driveBackwardTillDistance( movement.getDistance(),
                                                     movement.getConstraint().getTargetPower(),
-                                                    movement.getTargetHeading(),
+                                                    targetHeading,
                                                     movement.getConstraint().getRampDown(),
                                                     movement.getConstraint().getStopMotor());
                     break;
                 case STRAFE_LEFT:
                     this.strafeLeftTillDistance( movement.getDistance(),
                                                 movement.getConstraint().getTargetPower(),
-                                                movement.getTargetHeading(),
+                                                targetHeading,
                                                 movement.getConstraint().getRampDown(),
                                                 movement.getConstraint().getStopMotor());
                     break;
                 case STRAFE_RIGHT:
                     this.strafeRightTillDistance( movement.getDistance(),
                                                     movement.getConstraint().getTargetPower(),
-                                                    movement.getTargetHeading(),
+                                                    targetHeading,
                                                     movement.getConstraint().getRampDown(),
                                                     movement.getConstraint().getStopMotor());
                     break;
                 case TURN_LEFT:
-                    this.turnLeftTillDegrees( movement.getTargetHeading(),
+                    targetHeading = movement.getTargetHeading();
+                    this.turnLeftTillDegrees( targetHeading,
                                                 movement.getConstraint().getTargetPower(),
                                                 movement.getConstraint().getRampDown(),
                                                 movement.getConstraint().getStopMotor() );
                     break;
                 case TURN_RIGHT:
-                    this.turnRightTillDegrees( movement.getTargetHeading(),
+                    targetHeading = movement.getTargetHeading();
+                    this.turnRightTillDegrees( targetHeading,
                                                 movement.getConstraint().getTargetPower(),
                                                 movement.getConstraint().getRampDown(),
                                                 movement.getConstraint().getStopMotor() );

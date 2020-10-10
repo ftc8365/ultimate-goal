@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ultimategoal.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
@@ -31,30 +32,37 @@ public class Autonomous extends LinearOpMode {
         robot.initComputerVision();
 
         Trajectory trajectory = robot.trajectoryBuilder()
-                .moveForward(54, 0 )
+                .moveForward(54 )
                 .turnLeft( 270 )
-                .moveForward(28, 270 )
+                .moveForward(28 )
                 .turnLeft( 180 )
-                .moveForward(28, 180 )
-                .turnLeft( 5 )
-                .moveForward(28, 0 )
+                .moveForward(28 )
+                .turnLeft( 0 )
+                .moveForward(28 )
                 .turnRight( 90 )
-                .moveForward(24, 90 )
+                .moveForward(24 )
                 .build();
 
         Trajectory trajectory2 = robot.trajectoryBuilder()
-//                .moveForward( 12, 0 )
-//                .moveBackward(12,0)
-//                 .turnLeft(270)
-//                .moveForward(20, 270)
+                .moveForward( 6 )
+                .turnRight(90)
+                .moveForward( 6 )
+                .turnRight(180)
+                .moveForward( 6 )
+                .turnRight(270)
+                .moveForward( 6 )
+                .turnRight(0)
+                .moveForward( 6 )
 //                .turnRight(90)
 //                .moveForward(18, 90)
-                .strafeLeft(6, 0)
-                .strafeRight(6, 0)
+//                .strafeLeft(6, 0)
+//                .strafeRight(6, 0)
                 .build();
 
         ElapsedTime timer = new ElapsedTime();
         int count = 0;
+
+        robot.setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
 
         while (inInitializationState()) {
             telemetry.addData("", "------------------------------");
@@ -76,6 +84,7 @@ public class Autonomous extends LinearOpMode {
         // Start of program
         ///////////////////////////////////////
 
+        robot.setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
         robot.resetAutonomousTimer();
 
         if (opModeIsActive()) {
