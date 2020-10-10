@@ -59,6 +59,28 @@ public class Autonomous extends LinearOpMode {
 //                .strafeRight(6, 0)
                 .build();
 
+        Trajectory trajectory3 = robot.trajectoryBuilder()
+                .moveForward( 54 )
+                .turnLeft(270)
+                .moveForward( 28 )
+                .turnLeft(180)
+                .moveForward( 28 )
+                .turnLeft(0)
+                .moveForward( 48 )
+                .build();
+
+        Trajectory trajectory4 = robot.trajectoryBuilder()
+                .moveForward( 54 )
+                .turnLeft(270)
+                .moveForward( 28 )
+                .turnLeft(180)
+                .moveForward( 28 )
+                .turnLeft(0)
+                .moveForward( 96 )
+                .turnRight(90)
+                .build();
+
+
         ElapsedTime timer = new ElapsedTime();
         int count = 0;
 
