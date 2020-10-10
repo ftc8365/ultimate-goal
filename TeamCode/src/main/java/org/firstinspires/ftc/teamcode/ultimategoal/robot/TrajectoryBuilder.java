@@ -6,43 +6,43 @@ import java.util.List;
 public class TrajectoryBuilder {
     Trajectory trajectory = new Trajectory();
 
-    public TrajectoryBuilder moveForward( double distanceInInches, int targetHeading ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_FORWARD, distanceInInches, targetHeading, new Constraint() ) );
+    public TrajectoryBuilder moveForward( double distanceInInches ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_FORWARD, distanceInInches, -1, new Constraint() ) );
         return this;
     }
 
-    public TrajectoryBuilder moveForward( double distanceInInches, int targetHeading, Constraint constraint ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_FORWARD, distanceInInches, targetHeading, constraint ) );
+    public TrajectoryBuilder moveForward( double distanceInInches, Constraint constraint ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_FORWARD, distanceInInches, -1, constraint ) );
         return this;
     }
 
-    public TrajectoryBuilder moveBackward( double distanceInInches, int targetHeading ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_BACKWARD, distanceInInches, targetHeading, new Constraint() ) );
+    public TrajectoryBuilder moveBackward( double distanceInInches ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_BACKWARD, distanceInInches, -1, new Constraint() ) );
         return this;
     }
 
-    public TrajectoryBuilder moveBackward( double distanceInInches, int targetHeading, Constraint constraint ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_BACKWARD, distanceInInches, targetHeading, constraint ) );
+    public TrajectoryBuilder moveBackward( double distanceInInches, Constraint constraint ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.MOVE_BACKWARD, distanceInInches, -1, constraint ) );
         return this;
     }
 
-    public TrajectoryBuilder strafeLeft( double distanceInInches, int targetHeading ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_LEFT, distanceInInches, targetHeading, new Constraint() ) );
+    public TrajectoryBuilder strafeLeft( double distanceInInches ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_LEFT, distanceInInches, -1, new Constraint() ) );
         return this;
     }
 
-    public TrajectoryBuilder strafeLeft( double distanceInInches, int targetHeading, Constraint constraint ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_LEFT, distanceInInches, targetHeading, constraint ) );
+    public TrajectoryBuilder strafeLeft( double distanceInInches, Constraint constraint ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_LEFT, distanceInInches, -1, constraint ) );
         return this;
     }
 
-    public TrajectoryBuilder strafeRight( double distanceInInches, int targetHeading ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_RIGHT, distanceInInches, targetHeading, new Constraint() ) );
+    public TrajectoryBuilder strafeRight( double distanceInInches ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_RIGHT, distanceInInches, -1, new Constraint() ) );
         return this;
     }
 
-    public TrajectoryBuilder strafeRight( double distanceInInches, int targetHeading, Constraint constraint ) {
-        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_RIGHT, distanceInInches, targetHeading, constraint ) );
+    public TrajectoryBuilder strafeRight( double distanceInInches, Constraint constraint ) {
+        trajectory.getMovements().add( new Movement( Movement.Type.STRAFE_RIGHT, distanceInInches, -1, constraint ) );
         return this;
     }
 
