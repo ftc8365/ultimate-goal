@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ultimategoal.robot;
+package org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling;
 
 public class Constraint {
 

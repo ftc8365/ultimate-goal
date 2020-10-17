@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ultimategoal.robot;
+package org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling;
 
 public class PIDController {
     final double RAMP_UP_RATE_DRIVE     = 0.01;

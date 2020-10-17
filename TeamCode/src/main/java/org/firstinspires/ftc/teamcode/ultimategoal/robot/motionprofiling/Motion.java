@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.ultimategoal.robot;
+package org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling;
 
-public class Movement {
+public class Motion {
     public enum Type {
         MOVE_FORWARD,
         MOVE_BACKWARD,
@@ -17,26 +17,26 @@ public class Movement {
 
     private  Constraint     constraint;
 
-    Movement( Type type, double distance, int targetHeading, Constraint constraint ) {
+    Motion(Type type, double distance, int targetHeading, Constraint constraint ) {
         this.type           = type;
         this.distance       = distance;
         this.targetHeading  = targetHeading;
         this.constraint     = constraint;
     }
 
-    Type getType() {
+    public Type getType() {
         return this.type;
     }
 
-    double getDistance() {
+    public double getDistance() {
         return this.distance;
     }
 
-    int getTargetHeading() {
+    public int getTargetHeading() {
         return this.targetHeading;
     }
 
-    Constraint getConstraint() {
+    public Constraint getConstraint() {
         return this.constraint;
     }
 }

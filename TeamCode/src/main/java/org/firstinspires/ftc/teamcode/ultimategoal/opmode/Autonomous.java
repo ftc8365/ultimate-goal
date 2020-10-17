@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
-import org.firstinspires.ftc.teamcode.ultimategoal.robot.Trajectory;
+import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Trajectory;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Autonomous")
 //@Disabled
@@ -28,8 +28,8 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() {
         String ringPatten = "";
 
-        robot.initDriveTrain();
-        robot.initComputerVision();
+        robot.getDriveTrain().init();
+        robot.getComputerVision().init();
 
         Trajectory trajectory = robot.trajectoryBuilder()
                 .moveForward( 54 )
@@ -84,57 +84,40 @@ public class Autonomous extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
         int count = 0;
 
-        robot.setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
+        robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
 
         while (inInitializationState()) {
+            robot.getDriveTrain().clearBulkCache();
+
+            ringPatten = robot.getComputerVision().detect();
+
+
+            telemetry.addData("ring pattern",   ringPatten);
             telemetry.addData("", "------------------------------");
+            telemetry.addData("left",   robot.getDriveTrain().getLeftOdometryPosition());
+            telemetry.addData("right",  robot.getDriveTrain().getRightOdometryPosition());
+            telemetry.addData("odom",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry() ));
+            telemetry.addData("gyro",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingGyro()));
 
-            //            robot.getComputerVision().detect();
-
-            robot.clearBulkCache();
-            telemetry.addData("left",   robot.getLeftOdometryPosition());
-            telemetry.addData("right",  robot.getRightOdometryPosition());
-            telemetry.addData("odom",   robot.getCurrentPositionInDegreesUsingOdometry() );
-            telemetry.addData("gyro",   robot.getCurrentPositionInDegreesUsingGyro());
-
-//            telemetry.addData( "rate/sec",  ++count / timer.seconds() );
+            telemetry.addData("", "------------------------------");
+            telemetry.addData( "rate/sec",  String.format("%.2f", ++count / timer.seconds()) );
 
             telemetry.addData(">", "Press Play to start");
             telemetry.update();
         }
 
+        robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
+        robot.resetAutonomousTimer();
+
         ///////////////////////////////////////
         // Start of program
         ///////////////////////////////////////
-
-        robot.setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
-        robot.resetAutonomousTimer();
 
         if (opModeIsActive()) {
             robot.followTrajectory(trajectory2);
         }
 
-        robot.clearBulkCache();
-/*
-        int rightPos = robot.getRightOdometryPosition();
-        int leftPos = robot.getLeftOdometryPosition();
-        int centerPos = robot.getCenterOdometryPosition();
-
-        telemetry.addData("init_right", rightInit);
-        telemetry.addData("init_left", leftInit);
-        telemetry.addData("init_ctr", centerInit);
-
-        telemetry.addData("curr_right", rightPos);
-        telemetry.addData("curr_left", leftPos);
-        telemetry.addData("curr_ctr", centerPos); */
-
-        robot.clearBulkCache();
-        telemetry.addData("odom", robot.getCurrentPositionInDegreesUsingOdometry());
-        telemetry.addData("gyro", robot.getCurrentPositionInDegreesUsingGyro());
-        telemetry.update();
-
-        sleep(1000000);
-        robot.shutdown();
+        robot.getComputerVision().shutdown();
     }
 
 }

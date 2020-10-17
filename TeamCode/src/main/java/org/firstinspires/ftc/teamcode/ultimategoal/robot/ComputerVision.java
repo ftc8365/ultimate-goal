@@ -13,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 
 public class ComputerVision {
-    final Telemetry telemetry;
-    final HardwareMap hardwareMap;
+
+    final Robot robot;
 
     // Declare VUFORIA KEY
     private static final String VUFORIA_KEY =
@@ -30,20 +30,24 @@ public class ComputerVision {
     private static final String LABEL_NO_ELEMENT = "None";
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public ComputerVision(OpMode opMode) {
-        this.hardwareMap = opMode.hardwareMap;
-        this.telemetry = opMode.telemetry;
+    public ComputerVision(Robot robot) {
+        this.robot = robot;
+    }
+
+    public void init() {
+        initVuforia();
+        initTfod();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void initVuforia() {
+    private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = robot.opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -52,9 +56,9 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+    private void initTfod() {
+        int tfodMonitorViewId = robot.opMode.hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", robot.opMode.hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.8f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
@@ -69,12 +73,6 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO : detect() need to
-    //        - return a value (eg, String) that indicates the label of the object detected
-    //        - should return one of the following:
-    //        -   "quad"
-    //        -   "Single"
-    //        -   "None"
     public String detect() {
         String value = "None";
         if (tfod != null) {
@@ -82,13 +80,13 @@ public class ComputerVision {
             // the last time that call was made.
             List<Recognition> recognitions = tfod.getRecognitions();
             if (recognitions != null) {
-                telemetry.addData("# Object Detected", recognitions.size());
+                robot.opMode.telemetry.addData("# Object Detected", recognitions.size());
                 // step through the list of recognitions and display boundary info.
                 int i = 0;
                 for (Recognition recognition : recognitions) {
-                    telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                    telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f", recognition.getLeft(), recognition.getTop());
-                    telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f", recognition.getRight(), recognition.getBottom());
+                    robot.opMode.telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                    robot.opMode.telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f", recognition.getLeft(), recognition.getTop());
+                    robot.opMode.telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f", recognition.getRight(), recognition.getBottom());
                     value = recognition.getLabel();
                 }
             }

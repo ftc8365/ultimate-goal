@@ -12,19 +12,19 @@ import org.firstinspires.ftc.teamcode.ultimategoal.robot.*;
 public class DriverControl extends LinearOpMode {
     Robot robot = new Robot(this);
 
-    double DRIVE_NORMAL_POWER_RATIO = 1.00;
-//    double DRIVE_NORMAL_POWER_RATIO = 0.30;
+//    double DRIVE_NORMAL_POWER_RATIO = 1.00;
+    double DRIVE_NORMAL_POWER_RATIO = 0.60;
     double DRIVE_LOW_POWER_RATIO    = 0.30;
-    double TURN_NORMAL_POWER_RATIO  = 0.75;
-//    double TURN_NORMAL_POWER_RATIO  = 0.35;
+//    double TURN_NORMAL_POWER_RATIO  = 0.75;
+    double TURN_NORMAL_POWER_RATIO  = 0.50;
     double TURN_LOW_POWER_RATIO     = 0.25;
 
     boolean driveNormalMode = true;
 
     @Override
     public void runOpMode() {
-        robot.setRunningAutonomous(false);
-        robot.initDriveTrain();
+        robot.getDriveTrain().init();
+        robot.getGrabber().init();
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
@@ -35,11 +35,25 @@ public class DriverControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             operateDriveTrain();
+            operateAttachment();
             telemetry.update();
         }
 
-        robot.stopDriveMotors();
+        robot.getDriveTrain().stopDriveMotors();
     }
+
+    void operateAttachment() {
+        // TODO : Replace code below with Grabber object methods
+
+        if (gamepad2.dpad_left ) {
+//            robot.servoGrabber.setPosition(1);
+        }
+        if (gamepad2.dpad_right) {
+//            robot.servoGrabber.setPosition(0.55);
+        }
+
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////
     // operateDriveTrain
@@ -161,7 +175,7 @@ public class DriverControl extends LinearOpMode {
             }
         }
 
-        robot.setDriveMotorPower(motorFRPower, motorFLPower, motorBRPower, motorBLPower);
+        robot.getDriveTrain().setDriveMotorPower(motorFRPower, motorFLPower, motorBRPower, motorBLPower);
     }
 
     int getJoystickPosition(double x, double y) {
