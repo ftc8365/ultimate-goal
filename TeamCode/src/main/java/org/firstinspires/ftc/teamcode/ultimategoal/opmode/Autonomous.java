@@ -115,6 +115,9 @@ public class Autonomous extends LinearOpMode {
 
         if (opModeIsActive()) {
             robot.followTrajectory(trajectory2);
+
+            // TODO : 
+
         }
 
         robot.getComputerVision().shutdown();
