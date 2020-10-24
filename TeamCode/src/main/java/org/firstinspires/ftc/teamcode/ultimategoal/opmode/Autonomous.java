@@ -29,7 +29,24 @@ public class Autonomous extends LinearOpMode {
         String ringPatten = "";
 
         robot.getDriveTrain().init();
+        robot.getGrabber().init();
         robot.getComputerVision().init();
+
+        Trajectory trajectoryTest = robot.trajectoryBuilder()
+                .setTargetPower( 40 )
+                .moveForward( 12 )
+                .turnRight( 90 )
+                .moveForward( 6 )
+                .turnRight( 180 )
+                .moveForward( 12 )
+                .turnRight( 270 )
+                .moveForward( 6 )
+                .turnRight( 0 )
+                .moveForward( 12 )
+                .turnRight( 45 )
+                .turnLeft( 0 )
+                .moveBackward( 12 )
+                .build();
 
         Trajectory trajectory = robot.trajectoryBuilder()
                 .moveForward( 54 )
@@ -43,21 +60,6 @@ public class Autonomous extends LinearOpMode {
                 .moveForward( 24 )
                 .build();
 
-        Trajectory trajectory2 = robot.trajectoryBuilder()
-                .moveForward( 6 )
-                .turnRight(90)
-                .moveForward( 6 )
-                .turnRight(180)
-                .moveForward( 6 )
-                .turnRight(270)
-                .moveForward( 6 )
-                .turnRight(0)
-                .moveForward( 6 )
-//                .turnRight(90)
-//                .moveForward(18, 90)
-//                .strafeLeft(6, 0)
-//                .strafeRight(6, 0)
-                .build();
 
         Trajectory trajectory3 = robot.trajectoryBuilder()
                 .moveForward( 54 )
@@ -86,11 +88,13 @@ public class Autonomous extends LinearOpMode {
 
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
 
+        robot.getGrabber().servoGrabberArm1.setPosition(0);
+        robot.getGrabber().servoGrabberArm2.setPosition(1);
+
         while (inInitializationState()) {
             robot.getDriveTrain().clearBulkCache();
 
             ringPatten = robot.getComputerVision().detect();
-
 
             telemetry.addData("ring pattern",   ringPatten);
             telemetry.addData("", "------------------------------");
@@ -106,21 +110,31 @@ public class Autonomous extends LinearOpMode {
             telemetry.update();
         }
 
+        robot.getComputerVision().shutdown();
+
+        if (!opModeIsActive() || isStopRequested())
+            return;
+
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
         robot.resetAutonomousTimer();
+
 
         ///////////////////////////////////////
         // Start of program
         ///////////////////////////////////////
 
-        if (opModeIsActive()) {
-            robot.followTrajectory(trajectory2);
+//        robot.followTrajectory(trajectoryTest);
+        robot.getGrabber().servoGrabberArm1.setPosition(1);
+        robot.getGrabber().servoGrabberArm2.setPosition(0);
 
-            // TODO : 
-
+        while (opModeIsActive()) {
+            robot.getDriveTrain().clearBulkCache();
+            telemetry.addData("odom",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry() ));
+            telemetry.addData("gyro",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingGyro()));
+            telemetry.update();
+            sleep(1000);
         }
 
-        robot.getComputerVision().shutdown();
     }
 
 }

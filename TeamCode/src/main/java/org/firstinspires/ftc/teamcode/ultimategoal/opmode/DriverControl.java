@@ -45,12 +45,19 @@ public class DriverControl extends LinearOpMode {
     void operateAttachment() {
         // TODO : Replace code below with Grabber object methods
 
-        if (gamepad2.dpad_left ) {
-//            robot.servoGrabber.setPosition(1);
+        if (gamepad1.dpad_left ) {
+            robot.getGrabber().openGrabber();
         }
-        if (gamepad2.dpad_right) {
-//            robot.servoGrabber.setPosition(0.55);
+        if (gamepad1.dpad_right) {
+            robot.getGrabber().closeGrabber();
         }
+        if (gamepad1.dpad_up) {
+            robot.getGrabber().armUp();
+        }
+        if (gamepad1.dpad_down) {
+            robot.getGrabber().armDown();
+        }
+
 
     }
 

@@ -24,7 +24,7 @@ public class MecanumDriveTrain {
     public final double ODOMETRY_WHEEL_RADIUS              = 1.49606 / 2;       // Nexus Omni wheel is 38mm in diagram, convert to inches
     public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION  = 1440;              // Based on E8T encoder spec
     public final int    ODOMETRY_WHEEL_TICKS_PER_INCH      = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
-    public final double ODOMETRY_WHEEL_DIAMETER            = 13.31;             // Width of left & right odometer wheels
+    public final double ODOMETRY_WHEEL_DIAMETER            = 13.40;             // Width of left & right odometer wheels
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare motors variables

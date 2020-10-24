@@ -8,7 +8,7 @@ public class PIDController {
     final double RAMP_DOWN_DRIVE_RANGE  = 30;
     final double RAMP_DOWN_TURN_DEGREES = 30;
 
-    final double MIN_DRIVE_POWER        = 0.10;
+    final double MIN_DRIVE_POWER        = 0.15;
     final double MIN_TURN_POWER         = 0.20;
     final double MIN_STRAFE_POWER       = 0.30;
     final double TURN_POWER             = 0.70;
