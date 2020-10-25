@@ -9,7 +9,6 @@ public class Grabber {
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare Motor
     ////////////////////////////////////////////////////////////////////////////////////
-    DcMotorEx       motorGrabberArm;
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare Servos
@@ -41,32 +40,19 @@ public class Grabber {
         this.servoGrabber   = robot.opMode.hardwareMap.get(Servo.class, "servoGrabber");
         this.servoArm1      = robot.opMode.hardwareMap.get(Servo.class, "servoGrabberArm1");
         this.servoArm2      = robot.opMode.hardwareMap.get(Servo.class, "servoGrabberArm2");
-
-        motorGrabberArm = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorGrabberArm");  // Configure the robot to use these 4 motor names,
-        motorGrabberArm.setDirection(DcMotor.Direction.FORWARD);
-        motorGrabberArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void armDown() {
+        double pos  = 0.0;
+        servoArm1.setPosition( pos );
+        servoArm2.setPosition( 1 - pos );
+    }
+
     public void armUp() {
-        motorGrabberArm.setPower(0.3);
-
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-        }
-        motorGrabberArm.setPower(0);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void armDown(){
-
-        motorGrabberArm.setPower(-0.3);
-        try {
-            Thread.sleep(250);
-        } catch (Exception e) {
-        }
-        motorGrabberArm.setPower(0);
+        double pos = 0.60;
+        servoArm1.setPosition(pos);
+        servoArm2.setPosition(1-pos);
     }
 
     public void openGrabber() {
@@ -76,7 +62,5 @@ public class Grabber {
     public void closeGrabber() {
         servoGrabber.setPosition(0.55);
     }
-
-
 
 }

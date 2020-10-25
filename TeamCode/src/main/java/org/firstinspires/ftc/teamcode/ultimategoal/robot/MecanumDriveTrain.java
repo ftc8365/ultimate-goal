@@ -46,8 +46,8 @@ public class MecanumDriveTrain {
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare sensors
     ////////////////////////////////////////////////////////////////////////////////////
-    IntegratingGyroscope        gyro;
-    NavxMicroNavigationSensor   navxMicro;
+//    IntegratingGyroscope        gyro;
+//    NavxMicroNavigationSensor   navxMicro;
 
     //////////////////////////////////////////
     // Declare reference to main robot
@@ -100,12 +100,12 @@ public class MecanumDriveTrain {
         this.initRightOdometryPosition  = this.getRightOdometryPosition();
         this.initCenterOdometryPosition = this.getCenterOdometryPosition();
 
-        navxMicro = robot.opMode.hardwareMap.get(NavxMicroNavigationSensor.class, "gyro_sensor");
-        gyro = (IntegratingGyroscope) navxMicro;
+//        navxMicro = robot.opMode.hardwareMap.get(NavxMicroNavigationSensor.class, "gyro_sensor");
+//        gyro = (IntegratingGyroscope) navxMicro;
 
-        while (navxMicro.isCalibrating()) {
-            robot.opMode.sleep(50);
-        }
+//        while (navxMicro.isCalibrating()) {
+//            robot.opMode.sleep(50);
+ //       }
     }
 
     public void setDriveTrainZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
@@ -121,9 +121,10 @@ public class MecanumDriveTrain {
     }
 
     public double getCurrentHeading() {
-        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+//        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+        return 0;
     }
 
     public int getInitLeftOdometryPosition() {

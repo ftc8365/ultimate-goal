@@ -25,6 +25,7 @@ public class DriverControl extends LinearOpMode {
     public void runOpMode() {
         robot.getDriveTrain().init();
         robot.getGrabber().init();
+        robot.getIntake().init();
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
@@ -43,8 +44,6 @@ public class DriverControl extends LinearOpMode {
     }
 
     void operateAttachment() {
-        // TODO : Replace code below with Grabber object methods
-
         if (gamepad1.dpad_left ) {
             robot.getGrabber().openGrabber();
         }
@@ -56,6 +55,17 @@ public class DriverControl extends LinearOpMode {
         }
         if (gamepad1.dpad_down) {
             robot.getGrabber().armDown();
+        }
+
+        if (gamepad1.right_trigger > 0){
+            robot.getIntake().intake();
+        }
+        else if (gamepad1.left_trigger > 0){
+            robot.getIntake().outake();
+
+        }
+        else {
+            robot.getIntake().turnOff();
         }
 
 

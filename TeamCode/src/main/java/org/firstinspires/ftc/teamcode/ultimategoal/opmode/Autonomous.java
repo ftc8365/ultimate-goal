@@ -32,23 +32,24 @@ public class Autonomous extends LinearOpMode {
         robot.getGrabber().init();
         robot.getComputerVision().init();
 
-        Trajectory trajectoryTest = robot.trajectoryBuilder()
-                .setTargetPower( 40 )
-                .moveForward( 12 )
-                .turnRight( 90 )
-                .moveForward( 6 )
-                .turnRight( 180 )
-                .moveForward( 12 )
-                .turnRight( 270 )
-                .moveForward( 6 )
-                .turnRight( 0 )
-                .moveForward( 12 )
-                .turnRight( 45 )
-                .turnLeft( 0 )
-                .moveBackward( 12 )
+        Trajectory trajectoryzoneA1 = robot.trajectoryBuilder()
+                .moveForward( 64 )
                 .build();
 
-        Trajectory trajectory = robot.trajectoryBuilder()
+        Trajectory trajectoryzoneA2 = robot.trajectoryBuilder()
+                .turnLeft( 270 )
+                .moveForward( 18 )
+                .turnLeft( 180 )
+                .moveForward( 35 )
+                .build();
+        Trajectory trajectoryzoneA3 = robot.trajectoryBuilder()
+                .turnLeft( 0 )
+                .moveForward( 38 )
+                .turnRight( 90 )
+                .moveForward( 14 )
+                .build();
+
+        Trajectory trajectoryzoneA4 = robot.trajectoryBuilder()
                 .moveForward( 54 )
                 .turnLeft( 270 )
                 .moveForward( 28 )
@@ -88,9 +89,6 @@ public class Autonomous extends LinearOpMode {
 
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
 
-        robot.getGrabber().servoGrabberArm1.setPosition(0);
-        robot.getGrabber().servoGrabberArm2.setPosition(1);
-
         while (inInitializationState()) {
             robot.getDriveTrain().clearBulkCache();
 
@@ -122,18 +120,45 @@ public class Autonomous extends LinearOpMode {
         ///////////////////////////////////////
         // Start of program
         ///////////////////////////////////////
+        robot.getGrabber().openGrabber();
+        sleep(1000);
+        robot.getGrabber().armDown();
+        sleep(1000);
+        robot.getGrabber().closeGrabber();
+        sleep(1000);
+        robot.getGrabber().armUp();
+        sleep(1000);
 
-//        robot.followTrajectory(trajectoryTest);
-        robot.getGrabber().servoGrabberArm1.setPosition(1);
-        robot.getGrabber().servoGrabberArm2.setPosition(0);
+        robot.followTrajectory(trajectoryzoneA1);
 
-        while (opModeIsActive()) {
-            robot.getDriveTrain().clearBulkCache();
-            telemetry.addData("odom",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry() ));
-            telemetry.addData("gyro",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingGyro()));
-            telemetry.update();
-            sleep(1000);
-        }
+        robot.getGrabber().armDown();
+        sleep(1000);
+        robot.getGrabber().openGrabber();
+        sleep(1000);
+        robot.getGrabber().armUp();
+        sleep(1000);
+
+        robot.followTrajectory((trajectoryzoneA2));
+
+        robot.getGrabber().openGrabber();
+        sleep(1000);
+        robot.getGrabber().armDown();
+        sleep(1000);
+        robot.getGrabber().closeGrabber();
+        sleep(1000);
+        robot.getGrabber().armUp();
+        sleep(1000);
+
+        robot.followTrajectory((trajectoryzoneA3));
+
+        robot.getGrabber().armDown();
+        sleep(1000);
+        robot.getGrabber().openGrabber();
+        sleep(1000);
+        robot.getGrabber().armUp();
+        sleep(1000);
+
+
 
     }
 

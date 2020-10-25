@@ -67,7 +67,7 @@ public class ComputerVision {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void activate() {
-        if (tfod != null) {
+//        if (tfod != null) {
             tfod.activate();
 
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
@@ -79,7 +79,7 @@ public class ComputerVision {
 
             // TODO: change the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
             tfod.setZoom(3, 3.5);
-        }
+//        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +89,7 @@ public class ComputerVision {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
             List<Recognition> recognitions = tfod.getRecognitions();
+
             if (recognitions != null) {
                 robot.opMode.telemetry.addData("# Object Detected", recognitions.size());
                 // step through the list of recognitions and display boundary info.

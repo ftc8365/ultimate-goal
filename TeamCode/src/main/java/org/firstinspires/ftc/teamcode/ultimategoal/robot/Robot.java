@@ -19,6 +19,7 @@ public class Robot {
     MecanumDriveTrain   driveTrain;
     ComputerVision      computerVision;
     Grabber             grabber;
+    Intake              intake;
 
     //////////////////////////////////////////
     // Declare sensors
@@ -40,6 +41,7 @@ public class Robot {
         this.driveTrain         = new MecanumDriveTrain(this);
         this.computerVision     = new ComputerVision(this);
         this.grabber            = new Grabber(this);
+        this.intake             = new Intake(this);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +60,7 @@ public class Robot {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public Intake getIntake() {return this.intake; }
     // resetAutonomousTimer
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void resetAutonomousTimer() {
