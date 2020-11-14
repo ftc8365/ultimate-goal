@@ -107,7 +107,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(2, 3.5);
+            tfod.setZoom(3, 1.777);
         }
 
         /** Wait for the game to begin */
@@ -120,7 +120,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    List<Recognition> updatedRecognitions = tfod.getRecognitions();
                     if (updatedRecognitions != null) {
                       telemetry.addData("# Object Detected", updatedRecognitions.size());
                       // step through the list of recognitions and display boundary info.

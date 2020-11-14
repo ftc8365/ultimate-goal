@@ -78,7 +78,8 @@ public class ComputerVision {
             // (typically 1.78 or 16/9).
 
             // TODO: change the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(3, 3.5);
+            tfod.setZoom(3, 1.777);
+
 //        }
     }
 

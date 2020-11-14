@@ -1,26 +1,14 @@
 package org.firstinspires.ftc.teamcode.ultimategoal.robot;
 
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.KalmanFilter;
-import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.PIDController;
-
-import java.util.List;
-
-public class Intake {
+public class Shooter {
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare motors variables
     ////////////////////////////////////////////////////////////////////////////////////
-    DcMotorEx       motorIntake;
+    DcMotorEx       motorShooter;
 
     //////////////////////////////////////////
     // Declare reference to main robot
@@ -34,28 +22,29 @@ public class Intake {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Constructor
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public Intake(Robot robot ) {
-        this.robot          = robot;
+    public Shooter(Robot robot ) {
+        this.robot = robot;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // initDriveMotors
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void init() {
-        motorIntake = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorIntake");  // Configure the robot to use these 4 motor names,
-        motorIntake.setDirection(DcMotor.Direction.FORWARD);
-        motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        public void init() {
+            motorShooter = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorShooter");  // Configure the robot to use these 4 motor names,
+            motorShooter.setDirection(DcMotor.Direction.FORWARD);
+            motorShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
 
-    }
+        public void shooterOn(double targetVelocity){
+            motorShooter.setVelocity(targetVelocity);
+        }
 
-    public void intake(){
-        motorIntake.setPower(1.0);
-    }
-    public void outake(){
-        motorIntake.setPower(-1.0);
-    }
-    public void turnOff(){
-        motorIntake.setPower(0.0);
-    }
+        public double getVelocity() {
+            return motorShooter.getVelocity();
+        }
+
+        public void shooterOff(){
+            motorShooter.setPower(0);
+        }
 
 }

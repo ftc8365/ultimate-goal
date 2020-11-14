@@ -20,12 +20,15 @@ public class DriverControl extends LinearOpMode {
     double TURN_LOW_POWER_RATIO     = 0.25;
 
     boolean driveNormalMode = true;
+    boolean shooterOn       = false;
+
 
     @Override
     public void runOpMode() {
         robot.getDriveTrain().init();
         robot.getGrabber().init();
         robot.getIntake().init();
+        robot.getShooter().init();
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
@@ -46,28 +49,33 @@ public class DriverControl extends LinearOpMode {
     void operateAttachment() {
         if (gamepad1.dpad_left ) {
             robot.getGrabber().openGrabber();
-        }
-        if (gamepad1.dpad_right) {
+        } else if (gamepad1.dpad_right) {
             robot.getGrabber().closeGrabber();
-        }
-        if (gamepad1.dpad_up) {
+        } else if (gamepad1.dpad_up) {
             robot.getGrabber().armUp();
-        }
-        if (gamepad1.dpad_down) {
+        } else if (gamepad1.dpad_down) {
             robot.getGrabber().armDown();
         }
 
         if (gamepad1.right_trigger > 0){
             robot.getIntake().intake();
-        }
-        else if (gamepad1.left_trigger > 0){
+        } else if (gamepad1.left_trigger > 0){
             robot.getIntake().outake();
-
-        }
-        else {
+        } else {
             robot.getIntake().turnOff();
         }
 
+        if (gamepad1.y) {
+           shooterOn = true;
+        } else if(gamepad1.b) {
+            shooterOn = false;
+        }
+
+        if (shooterOn) {
+            robot.getShooter().shooterOn(1800);
+        } else {
+            robot.getShooter().shooterOff();
+        }
 
     }
 

@@ -88,6 +88,7 @@ public class Autonomous extends LinearOpMode {
         int count = 0;
 
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
+        robot.getComputerVision().activate();;
 
         while (inInitializationState()) {
             robot.getDriveTrain().clearBulkCache();
@@ -115,7 +116,6 @@ public class Autonomous extends LinearOpMode {
 
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
         robot.resetAutonomousTimer();
-
 
         ///////////////////////////////////////
         // Start of program
@@ -157,8 +157,7 @@ public class Autonomous extends LinearOpMode {
         sleep(1000);
         robot.getGrabber().armUp();
         sleep(1000);
-
-
+        
 
     }
 

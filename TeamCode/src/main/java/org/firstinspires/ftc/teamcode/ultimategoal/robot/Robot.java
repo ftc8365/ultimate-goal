@@ -20,6 +20,7 @@ public class Robot {
     ComputerVision      computerVision;
     Grabber             grabber;
     Intake              intake;
+    Shooter             shooter;
 
     //////////////////////////////////////////
     // Declare sensors
@@ -42,6 +43,7 @@ public class Robot {
         this.computerVision     = new ComputerVision(this);
         this.grabber            = new Grabber(this);
         this.intake             = new Intake(this);
+        this.shooter            = new Shooter(this);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +65,11 @@ public class Robot {
     public Intake getIntake() {return this.intake; }
     // resetAutonomousTimer
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Shooter getShooter() {return this.shooter;}
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     public void resetAutonomousTimer() {
         autonomusTimer.reset();
     }

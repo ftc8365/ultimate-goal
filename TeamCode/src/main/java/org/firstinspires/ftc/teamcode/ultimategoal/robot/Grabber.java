@@ -44,13 +44,13 @@ public class Grabber {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void armDown() {
-        double pos  = 0.0;
+        double pos  = 0.1;
         servoArm1.setPosition( pos );
         servoArm2.setPosition( 1 - pos );
     }
 
     public void armUp() {
-        double pos = 0.60;
+        double pos = 0.50;
         servoArm1.setPosition(pos);
         servoArm2.setPosition(1-pos);
     }
