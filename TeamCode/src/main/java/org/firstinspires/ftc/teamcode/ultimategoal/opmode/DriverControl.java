@@ -20,7 +20,6 @@ public class DriverControl extends LinearOpMode {
     double TURN_LOW_POWER_RATIO     = 0.25;
 
     boolean driveNormalMode = true;
-    boolean shooterOn       = false;
 
 
     @Override
@@ -39,15 +38,27 @@ public class DriverControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             operateDriveTrain();
-            operateAttachment();
+            operateGrabber();
+            operateIntake();
+            operateShooter();
             telemetry.update();
         }
 
+        robot.getShooter().stop();
         robot.getDriveTrain().stopDriveMotors();
     }
 
-    void operateAttachment() {
-        if (gamepad1.dpad_left ) {
+
+    //////////////////////////////////////////////////////////////
+    //
+    // dpad_left  : Opens grabber
+    // dpad_right : Closes grabber
+    // dpad_up    : Extends Arm Forward
+    // dpad_down  : Retracts Arm Backward
+    //
+    //////////////////////////////////////////////////////////////
+    void operateGrabber() {
+        if (gamepad1.dpad_left) {
             robot.getGrabber().openGrabber();
         } else if (gamepad1.dpad_right) {
             robot.getGrabber().closeGrabber();
@@ -56,27 +67,40 @@ public class DriverControl extends LinearOpMode {
         } else if (gamepad1.dpad_down) {
             robot.getGrabber().armDown();
         }
+    }
 
-        if (gamepad1.right_trigger > 0){
+    //////////////////////////////////////////////////////////////
+    //
+    // right_trigger : intake
+    // left_trigger  : outtake
+    //
+    //////////////////////////////////////////////////////////////
+    void operateIntake() {
+        if (gamepad1.right_trigger > 0) {
             robot.getIntake().intake();
-        } else if (gamepad1.left_trigger > 0){
+        } else if (gamepad1.left_trigger > 0) {
             robot.getIntake().outake();
         } else {
             robot.getIntake().turnOff();
         }
+    }
 
+
+    //////////////////////////////////////////////////////////////
+    //
+    // y  : Shooter State 1
+    // a  : Shooter State 2
+    // b  : Shooter off
+    //
+    //////////////////////////////////////////////////////////////
+    void operateShooter() {
         if (gamepad1.y) {
-           shooterOn = true;
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
+        } else if (gamepad1.a) {
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
         } else if(gamepad1.b) {
-            shooterOn = false;
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
         }
-
-        if (shooterOn) {
-            robot.getShooter().shooterOn(1800);
-        } else {
-            robot.getShooter().shooterOff();
-        }
-
     }
 
 

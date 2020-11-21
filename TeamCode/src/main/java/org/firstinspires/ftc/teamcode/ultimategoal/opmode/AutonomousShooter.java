@@ -6,9 +6,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous Shooter", group="Autonomous")
-//@Disabled
+@Disabled
 public class AutonomousShooter extends LinearOpMode {
 
     //////////////////////////////////////////////////////////////////////
@@ -43,6 +44,7 @@ public class AutonomousShooter extends LinearOpMode {
         if (!opModeIsActive() || isStopRequested())
             return;
 
+/*
         int targetVelocity = 1500;
         robot.getShooter().shooterOn(targetVelocity);
 
@@ -68,6 +70,7 @@ public class AutonomousShooter extends LinearOpMode {
             telemetry.update();
             sleep(100);
         }
+*/
     }
 
 }

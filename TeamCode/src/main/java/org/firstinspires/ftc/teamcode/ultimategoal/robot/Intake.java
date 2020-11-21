@@ -21,6 +21,7 @@ public class Intake {
     // Declare motors variables
     ////////////////////////////////////////////////////////////////////////////////////
     DcMotorEx       motorIntake;
+    DcMotorEx       motorIntakeLift;
 
     //////////////////////////////////////////
     // Declare reference to main robot
@@ -46,16 +47,24 @@ public class Intake {
         motorIntake.setDirection(DcMotor.Direction.FORWARD);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        motorIntakeLift = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorIntakeLift");  // Configure the robot to use these 4 motor names,
+        motorIntakeLift.setDirection(DcMotor.Direction.FORWARD);
+        motorIntakeLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void intake(){
-        motorIntake.setPower(1.0);
+    public void intake() {
+        motorIntake.setPower(-0.3);
+        motorIntakeLift.setPower(0.5);
     }
-    public void outake(){
-        motorIntake.setPower(-1.0);
+
+    public void outake() {
+        motorIntake.setPower(-0.3);
+        motorIntakeLift.setPower(0.25);
     }
-    public void turnOff(){
+
+    public void turnOff() {
         motorIntake.setPower(0.0);
+        motorIntakeLift.setPower(0.0);
     }
 
 }
