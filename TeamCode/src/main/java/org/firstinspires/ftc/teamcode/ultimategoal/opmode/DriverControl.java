@@ -21,7 +21,6 @@ public class DriverControl extends LinearOpMode {
 
     boolean driveNormalMode = true;
 
-
     @Override
     public void runOpMode() {
         robot.getDriveTrain().init();
@@ -37,10 +36,11 @@ public class DriverControl extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            operateShooter();
             operateDriveTrain();
             operateGrabber();
             operateIntake();
-            operateShooter();
+
             telemetry.update();
         }
 
@@ -83,6 +83,14 @@ public class DriverControl extends LinearOpMode {
         } else {
             robot.getIntake().turnOff();
         }
+
+        if (gamepad1.y){
+            robot.getIntake().liftBasket();
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
+        } else if (gamepad1.b){
+            robot.getIntake().lowerBasket();
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
+        }
     }
 
 
@@ -94,12 +102,22 @@ public class DriverControl extends LinearOpMode {
     //
     //////////////////////////////////////////////////////////////
     void operateShooter() {
-        if (gamepad1.y) {
+       if (gamepad1.y) {
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
         } else if (gamepad1.a) {
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
         } else if(gamepad1.b) {
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
+        }
+
+        if (gamepad1.right_bumper ){
+            robot.getShooter().pushPoker();
+        }
+        else if (gamepad1.left_bumper){
+            robot.getShooter().stopPoker();
+        }
+        else if (gamepad1.x) {
+            robot.getShooter().burstPoker();
         }
     }
 

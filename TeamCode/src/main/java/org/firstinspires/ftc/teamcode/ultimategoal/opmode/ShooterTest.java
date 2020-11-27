@@ -18,7 +18,7 @@ public class ShooterTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.getShooter().init();
+        robot.getShooter().initShooterTest();
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("", "------------------------------");
@@ -29,20 +29,40 @@ public class ShooterTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             operateShooter();
+
+            telemetry.addData("Shooter Power",    String.format("%.2f", robot.getShooter().getPower()));
+            telemetry.addData("Shooter Velocity", String.format("%.2f", robot.getShooter().getVelocity()));
+            telemetry.update();
         }
 
         robot.getShooter().stop();
     }
 
 
+
     void operateShooter() {
-        if (gamepad1.y) {
+        if (gamepad1.dpad_left) {
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
-        } else if (gamepad1.x) {
+        } else if (gamepad1.dpad_up) {
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
+        } else if(gamepad1.dpad_right){
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_3);
+        } else if(gamepad1.dpad_down){
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_4);
         } else if(gamepad1.b) {
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
         }
+
+        if (gamepad1.x) {
+            robot.getShooter().pushPokerTest();
+        } else if(gamepad1.y){
+            robot.getShooter().stopPokerTest();
+        }
+
+        if (gamepad1.right_bumper){
+            robot.getShooter().burstPoker();
+        }
+
     }
 
 }

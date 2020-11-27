@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.ultimategoal.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Shooter {
 
@@ -9,6 +11,8 @@ public class Shooter {
     // Declare motors variables
     ////////////////////////////////////////////////////////////////////////////////////
     DcMotorEx       motorShooter;
+    Servo           servoPoker;
+    Servo           servoPokerAssist;
 
     //////////////////////////////////////////
     // Declare reference to main robot
@@ -27,6 +31,13 @@ public class Shooter {
     //----------------------------------------------------------------------------------------------------------------------------------
     // Class Methods Starts Here
     //----------------------------------------------------------------------------------------------------------------------------------
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -39,41 +50,95 @@ public class Shooter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // initDriveMotors
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void init() {
-            motorShooter = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorShooter");  // Configure the robot to use these 4 motor names,
-            motorShooter.setDirection(DcMotor.Direction.FORWARD);
-            motorShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    public void init() {
+
+        motorShooter = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorShooter");  // Configure the robot to use these 4 motor names,
+        motorShooter.setDirection(DcMotor.Direction.FORWARD);
+        motorShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        servoPoker = robot.opMode.hardwareMap.get(Servo.class, "servoPoker");
+
+        servoPokerAssist = robot.opMode.hardwareMap.get(Servo.class, "servoPokerAssist");
+        servoPokerAssist.setPosition(0.6);
+    }
+
+    public void initShooterTest() {
+
+        motorShooter = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorShooter");  // Configure the robot to use these 4 motor names,
+        motorShooter.setDirection(DcMotor.Direction.REVERSE);
+        motorShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        this.servoPoker = robot.opMode.hardwareMap.get(Servo.class, "servoPoker");
+    }
+
+    public void setState( ShooterState state ) {
+        this.state = state;
+
+        switch (state) {
+            case SHOOTER_OFF:
+                motorShooter.setPower(0);
+                break;
+
+            case SHOOTER_STATE_1:
+                motorShooter.setVelocity(1800);
+                break;
+
+            case SHOOTER_STATE_2:
+                motorShooter.setVelocity(100);
+                break;
+
+            case SHOOTER_STATE_3:
+                motorShooter.setVelocity(500);
+                break;
+
+            case SHOOTER_STATE_4:
+                motorShooter.setVelocity(1500);
+                break;
         }
+    }
 
-        public void setState( ShooterState state ) {
-            this.state = state;
+    public void stop() {
+        setState( ShooterState.SHOOTER_OFF );
+    }
 
-            switch (state) {
-                case SHOOTER_OFF:
-                    motorShooter.setPower(0);
-                    break;
+    public double getPower() {
+        return this.motorShooter.getPower();
+    }
 
-                case SHOOTER_STATE_1:
-                    motorShooter.setVelocity(1800);
-                    break;
+    public double getVelocity() {
+        return this.motorShooter.getVelocity();
+    }
 
-                case SHOOTER_STATE_2:
-                    motorShooter.setVelocity(100);
-                    break;
-            }
-        }
+    public void pushPoker() {
+        servoPoker.setPosition( 0.45 );
+    }
 
-        public void stop() {
-            setState( ShooterState.SHOOTER_OFF );
-        }
+    public void stopPoker() {
+        servoPoker.setPosition( 0.75 );
+    }
 
-/*        public void shooterOn(double targetVelocity) {
-            motorShooter.setVelocity(targetVelocity);
-        }
+    public void pushPokerTest() {
+        servoPoker.setPosition( 0.3 );
+    }
 
-        public double getVelocity() {
-            return motorShooter.getVelocity();
-        }
+    public void stopPokerTest() {
+        servoPoker.setPosition( 0.35 );
+    }
 
-*/
+
+    public void burstPoker() {
+        pushPoker();
+        sleep(33);
+        stopPoker();
+        sleep(33);
+        pushPoker();
+        sleep(33);
+        stopPoker();
+        sleep(33);
+        pushPoker();
+        sleep(33);
+        stopPoker();
+        sleep(33);
+    }
+
 }
