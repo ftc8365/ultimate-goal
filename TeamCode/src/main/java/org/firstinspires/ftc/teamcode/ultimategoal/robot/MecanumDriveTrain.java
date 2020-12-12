@@ -1,15 +1,9 @@
 package org.firstinspires.ftc.teamcode.ultimategoal.robot;
 
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.KalmanFilter;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.PIDController;
 
@@ -43,12 +37,6 @@ public class MecanumDriveTrain {
     PIDController   pidController;
     KalmanFilter    kalmanFilter;
 
-    ////////////////////////////////////////////////////////////////////////////////////
-    // Declare sensors
-    ////////////////////////////////////////////////////////////////////////////////////
-//    IntegratingGyroscope        gyro;
-//    NavxMicroNavigationSensor   navxMicro;
-
     //////////////////////////////////////////
     // Declare reference to main robot
     //////////////////////////////////////////
@@ -65,7 +53,6 @@ public class MecanumDriveTrain {
         this.robot          = robot;
         this.pidController  = new PIDController(ODOMETRY_WHEEL_TICKS_PER_ROTATION);
         this.kalmanFilter   = new KalmanFilter();
-
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,12 +87,6 @@ public class MecanumDriveTrain {
         this.initRightOdometryPosition  = this.getRightOdometryPosition();
         this.initCenterOdometryPosition = this.getCenterOdometryPosition();
 
-//        navxMicro = robot.opMode.hardwareMap.get(NavxMicroNavigationSensor.class, "gyro_sensor");
-//        gyro = (IntegratingGyroscope) navxMicro;
-
-//        while (navxMicro.isCalibrating()) {
-//            robot.opMode.sleep(50);
- //       }
     }
 
     public void setDriveTrainZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
@@ -118,13 +99,6 @@ public class MecanumDriveTrain {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void clearBulkCache() {
         this.controlHub.clearBulkCache();
-    }
-
-    public double getCurrentHeading() {
-//        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-//        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-        return 0;
     }
 
     public int getInitLeftOdometryPosition() {
@@ -158,23 +132,6 @@ public class MecanumDriveTrain {
         return heading;
     }
 
-    public double getCurrentPositionInDegreesUsingGyro() {
-        double fromDegrees = getCurrentHeading();
-
-        // degrees
-        // 0, -45, -90, -180
-        // convert that to 0, 45, 90, 180
-
-        double toDegrees;
-
-        if (fromDegrees < 0)
-            toDegrees = fromDegrees * -1;
-        else
-            toDegrees = 360 - fromDegrees;
-
-        return toDegrees % 360;
-    }
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // setDriveMotorPower
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,17 +155,17 @@ public class MecanumDriveTrain {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public int getRightOdometryPosition() {
-        return motorFR.getCurrentPosition();
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public int getLeftOdometryPosition() {
         return motorFL.getCurrentPosition() * -1;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public int getLeftOdometryPosition() {
+        return motorBL.getCurrentPosition() ;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public int getCenterOdometryPosition() {
-        return motorBL.getCurrentPosition();
+        return motorFL.getCurrentPosition();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -77,17 +77,24 @@ public class DriverControl extends LinearOpMode {
     //////////////////////////////////////////////////////////////
     void operateIntake() {
         if (gamepad1.right_trigger > 0) {
+            if (robot.getIntake().isBasketUp()) {
+                robot.getShooter().stopPoker();
+                robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
+                sleep(100);
+                robot.getIntake().lowerBasket();
+            }
             robot.getIntake().intake();
+
         } else if (gamepad1.left_trigger > 0) {
             robot.getIntake().outake();
         } else {
             robot.getIntake().turnOff();
         }
 
-        if (gamepad1.y){
+        if (gamepad1.y) {
             robot.getIntake().liftBasket();
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
-        } else if (gamepad1.b){
+        } else if (gamepad1.b) {
             robot.getIntake().lowerBasket();
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
         }
@@ -102,13 +109,6 @@ public class DriverControl extends LinearOpMode {
     //
     //////////////////////////////////////////////////////////////
     void operateShooter() {
-       if (gamepad1.y) {
-            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
-        } else if (gamepad1.a) {
-            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
-        } else if(gamepad1.b) {
-            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
-        }
 
         if (gamepad1.right_bumper ){
             robot.getShooter().pushPoker();
@@ -272,3 +272,6 @@ public class DriverControl extends LinearOpMode {
     }
 
 }
+/*
+
+ */

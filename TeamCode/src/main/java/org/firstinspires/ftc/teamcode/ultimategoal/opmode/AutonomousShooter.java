@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.ultimategoal.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous Shooter", group="Autonomous")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous Test", group="Autonomous")
 @Disabled
 public class AutonomousShooter extends LinearOpMode {
 
@@ -17,6 +18,8 @@ public class AutonomousShooter extends LinearOpMode {
     //////////////////////////////////////////////////////////////////////
 
     ElapsedTime timer = new ElapsedTime();
+    Servo servoTest;
+    Servo servoTestGobilda;
 
     Robot robot = new Robot( this );
 
@@ -27,6 +30,12 @@ public class AutonomousShooter extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        this.servoTest      = hardwareMap.get(Servo.class, "servoTest");
+        this.servoTestGobilda      = hardwareMap.get(Servo.class, "servoTest2");
+
+        servoTest.setPosition(0.10);
+        servoTestGobilda.setPosition(0.20);
         String ringPatten = "";
 
         robot.getShooter().init();
@@ -43,6 +52,11 @@ public class AutonomousShooter extends LinearOpMode {
 
         if (!opModeIsActive() || isStopRequested())
             return;
+
+        servoTest.setPosition(0.95);
+        servoTestGobilda.setPosition(0.7);
+        sleep(2000);
+
 
 /*
         int targetVelocity = 1500;

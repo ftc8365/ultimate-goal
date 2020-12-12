@@ -59,7 +59,10 @@ public class Shooter {
         servoPoker = robot.opMode.hardwareMap.get(Servo.class, "servoPoker");
 
         servoPokerAssist = robot.opMode.hardwareMap.get(Servo.class, "servoPokerAssist");
-        servoPokerAssist.setPosition(0.6);
+
+        // Increase value to lower tilt
+        // Decrease value to raise tilt
+        servoPokerAssist.setPosition(0.58);
     }
 
     public void initShooterTest() {
@@ -127,18 +130,18 @@ public class Shooter {
 
 
     public void burstPoker() {
+        // 3 to 1 gear ration is 33 milli
         pushPoker();
-        sleep(33);
+        sleep(150);
         stopPoker();
-        sleep(33);
+        sleep(150);
         pushPoker();
-        sleep(33);
+        sleep(150);
         stopPoker();
-        sleep(33);
+        sleep(150);
         pushPoker();
-        sleep(33);
+        sleep(150);
         stopPoker();
-        sleep(33);
     }
 
 }

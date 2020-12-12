@@ -27,11 +27,11 @@ public class Intake {
 
     //////////////////////////////////////////
     Servo           servoBasketRight;
-    Servo           servoBasketLeft;
+//    Servo           servoBasketLeft;
     // Declare reference to main robot
     //////////////////////////////////////////
     Robot               robot;
-
+    boolean basketUp = false;
     //----------------------------------------------------------------------------------------------------------------------------------
     // Class Methods Starts Here
     //----------------------------------------------------------------------------------------------------------------------------------
@@ -56,15 +56,13 @@ public class Intake {
         motorIntakeLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.servoBasketRight      = robot.opMode.hardwareMap.get(Servo.class, "servoBasketRight");
-        this.servoBasketLeft      = robot.opMode.hardwareMap.get(Servo.class, "servoBasketLeft");
-
-
+//        this.servoBasketLeft      = robot.opMode.hardwareMap.get(Servo.class, "servoBasketLeft");
 
     }
 
     public void intake() {
-        motorIntake.setPower(0.5);
-        motorIntakeLift.setPower(0.2);
+        motorIntake.setPower(0.30);
+        motorIntakeLift.setPower(0.5);
     }
 
     public void outake() {
@@ -78,15 +76,23 @@ public class Intake {
     }
 
     public void liftBasket() {
-        double pos = 0.20;
+//        double pos = 0.80;
+        double pos = 0.780;
+        basketUp = true;
         servoBasketRight.setPosition(pos);
 //        servoBasketLeft.setPosition(1-pos);
     }
 
     public void lowerBasket() {
-        double pos = 0.7;
+//        double pos = 0.70;
+        double pos = 0.07;
+        basketUp = false;
         servoBasketRight.setPosition(pos);
 //        servoBasketLeft.setPosition(1-pos);
+    }
+
+    public boolean isBasketUp() {
+        return basketUp;
     }
 
 }

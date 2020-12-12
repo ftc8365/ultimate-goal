@@ -43,14 +43,25 @@ public class Grabber {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void armDown() {
+    public void armUp() {
         double pos  = 0.1;
         servoArm1.setPosition( pos );
         servoArm2.setPosition( 1 - pos );
     }
 
-    public void armUp() {
+    public void armDown() {
         double pos = 0.50;
+        servoArm1.setPosition(pos);
+        servoArm2.setPosition(1-pos);
+    }
+    public void armDownAuto() {
+        double pos  = 0.1;
+        servoArm1.setPosition( pos );
+        servoArm2.setPosition( 1 - pos );
+    }
+
+    public void armUpAuto() {
+        double pos = 0.75;
         servoArm1.setPosition(pos);
         servoArm2.setPosition(1-pos);
     }
