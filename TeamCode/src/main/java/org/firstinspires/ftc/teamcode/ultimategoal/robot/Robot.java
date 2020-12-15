@@ -87,58 +87,78 @@ public class Robot {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void followTrajectory( Trajectory trajectory ) {
-        List< Motion > movements = trajectory.getMotions();
-
-        int targetHeading = 0;
+        List<Motion> movements = trajectory.getMotions();
 
         for (Motion motion : movements) {
-            switch (motion.getType()) {
-                case MOVE_FORWARD:
-                    getDriveTrain().driveForwardTillDistance( motion.getDistance(),
-                            motion.getConstraint().getTargetPower(),
-                                                    targetHeading,
-                                                    motion.getConstraint().getRampDown(),
-                                                    motion.getConstraint().getStopMotor());
-                    break;
-                case MOVE_BACKWARD:
-                    getDriveTrain().driveBackwardTillDistance( motion.getDistance(),
-                                                                motion.getConstraint().getTargetPower(),
-                                                                targetHeading,
-                                                                motion.getConstraint().getRampDown(),
-                                                                motion.getConstraint().getStopMotor());
-                    break;
-                case STRAFE_LEFT:
-                    getDriveTrain().strafeLeftTillDistance( motion.getDistance(),
-                                                            motion.getConstraint().getTargetPower(),
-                                                            targetHeading,
-                                                            motion.getConstraint().getRampDown(),
-                                                            motion.getConstraint().getStopMotor());
-                    break;
-                case STRAFE_RIGHT:
-                    getDriveTrain().strafeRightTillDistance( motion.getDistance(),
-                                                    motion.getConstraint().getTargetPower(),
-                                                    targetHeading,
-                                                    motion.getConstraint().getRampDown(),
-                                                    motion.getConstraint().getStopMotor());
-                    break;
-                case TURN_LEFT:
-                    targetHeading = motion.getTargetHeading();
-                    getDriveTrain().turnLeftTillDegrees( targetHeading,
-                                                        motion.getConstraint().getTargetPower(),
-                                                        motion.getConstraint().getRampDown(),
-                                                        motion.getConstraint().getStopMotor() );
-                    break;
-                case TURN_RIGHT:
-                    targetHeading = motion.getTargetHeading();
-                    getDriveTrain().turnRightTillDegrees( targetHeading,
-                                                            motion.getConstraint().getTargetPower(),
-                                                            motion.getConstraint().getRampDown(),
-                                                            motion.getConstraint().getStopMotor() );
-                    break;
-                case STOP:
-                    getDriveTrain().stopDriveMotors();
-                    break;
-            }
+            runMotion(motion);
+
+            if (motion.getType() == Motion.Type.STOP)
+                break;
         }
+    }
+
+    public void resumeTrajectory( Trajectory trajectory ) {
+        List<Motion> movements = trajectory.getMotions();
+
+        for (Motion motion : movements) {
+            if (motion.isCompleted())
+                continue;
+
+            runMotion(motion);
+
+            if (motion.getType() == Motion.Type.STOP)
+                break;
+        }
+    }
+
+
+    private void runMotion( Motion motion) {
+        switch (motion.getType()) {
+            case MOVE_FORWARD:
+                getDriveTrain().driveForwardTillDistance( motion.getDistance(),
+                                                motion.getConstraint().getTargetPower(),
+                                                motion.getTargetHeading(),
+                                                motion.getConstraint().getRampDown(),
+                                                motion.getConstraint().getStopMotor());
+                break;
+            case MOVE_BACKWARD:
+                getDriveTrain().driveBackwardTillDistance( motion.getDistance(),
+                                                motion.getConstraint().getTargetPower(),
+                                                motion.getTargetHeading(),
+                                                motion.getConstraint().getRampDown(),
+                                                motion.getConstraint().getStopMotor());
+                break;
+            case STRAFE_LEFT:
+                getDriveTrain().strafeLeftTillDistance( motion.getDistance(),
+                                                motion.getConstraint().getTargetPower(),
+                                                motion.getTargetHeading(),
+                                                motion.getConstraint().getRampDown(),
+                                                motion.getConstraint().getStopMotor());
+                break;
+            case STRAFE_RIGHT:
+                getDriveTrain().strafeRightTillDistance( motion.getDistance(),
+                                                motion.getConstraint().getTargetPower(),
+                                                motion.getTargetHeading(),
+                                                motion.getConstraint().getRampDown(),
+                                                motion.getConstraint().getStopMotor());
+                break;
+            case TURN_LEFT:
+                getDriveTrain().turnLeftTillDegrees( motion.getTargetHeading(),
+                                                    motion.getConstraint().getTargetPower(),
+                                                    motion.getConstraint().getRampDown(),
+                                                    motion.getConstraint().getStopMotor() );
+                break;
+            case TURN_RIGHT:
+                getDriveTrain().turnRightTillDegrees( motion.getTargetHeading(),
+                                                    motion.getConstraint().getTargetPower(),
+                                                    motion.getConstraint().getRampDown(),
+                                                    motion.getConstraint().getStopMotor() );
+                break;
+            case STOP:
+                getDriveTrain().stopDriveMotors();
+                break;
+        }
+
+        motion.setCompleted();
     }
 }

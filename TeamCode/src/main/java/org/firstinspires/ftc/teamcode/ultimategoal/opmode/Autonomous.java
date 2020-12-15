@@ -35,30 +35,22 @@ public class Autonomous extends LinearOpMode {
         robot.getIntake().init();
         robot.getComputerVision().init();
 
-        Trajectory trajectoryzoneA1 = robot.trajectoryBuilder()
+        Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
+                .setDefaultTargetPower( 50 )
                 .moveForward( 60 )
-                .turnLeft(345)
+                .turnLeft( 345 )
+                .stop()
+                .turnRight( 60 )
+                .stop()
+                .moveBackward( 36 )
+                .turnRight( 180 )
+                .moveForward( 21 )
+                .stop()
+                .moveBackward( 21 )
+                .turnLeft( 60 )
+                .moveForward( 33 )
                 .build();
 
-
-        Trajectory trajectoryzoneA3 = robot.trajectoryBuilder()
-                .turnRight(60)
-                .moveForward(2)
-                .build();
-
-        Trajectory trajectoryzoneA4 = robot.trajectoryBuilder()
-                .turnRight(60)
-                .moveBackward(36)
-                .turnRight(180)
-                .moveForward(21)
-                .build();
-
-        Trajectory trajectoryzoneA5 = robot.trajectoryBuilder()
-                .turnRight(180)
-                .moveBackward(20)
-                .turnLeft(60)
-                .moveForward(33)
-                .build();
 
 /*
 
@@ -116,14 +108,14 @@ public class Autonomous extends LinearOpMode {
         int count = 0;
 
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
-//        robot.getComputerVision().activate();;
+        robot.getComputerVision().activate();;
         robot.getIntake().liftBasket();
         robot.getGrabber().closeGrabber();
 
         while (inInitializationState()) {
             robot.getDriveTrain().clearBulkCache();
 
-//            ringPatten = robot.getComputerVision().detect();
+            ringPatten = robot.getComputerVision().detect();
 
             telemetry.addData("ring pattern",   ringPatten);
             telemetry.addData("", "------------------------------");
@@ -134,7 +126,6 @@ public class Autonomous extends LinearOpMode {
             telemetry.addData("right Chg",  robot.getDriveTrain().getRightOdometryPosition() - robot.getDriveTrain().getInitRightOdometryPosition());
 
             telemetry.addData("odom",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry() ));
-            telemetry.addData("gyro",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingGyro()));
 
             telemetry.addData("", "------------------------------");
             telemetry.addData( "rate/sec",  String.format("%.2f", ++count / timer.seconds()) );
@@ -148,8 +139,8 @@ public class Autonomous extends LinearOpMode {
         if (!opModeIsActive() || isStopRequested())
             return;
 
-        robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
         robot.resetAutonomousTimer();
+        robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
 
         ///////////////////////////////////////
         // Start of program
@@ -157,27 +148,45 @@ public class Autonomous extends LinearOpMode {
         robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
         robot.getGrabber().armUp();
         robot.getShooter().stopPoker();
-        robot.followTrajectory((trajectoryzoneA1));
+
+        // TODO : Add logic to determine ring pattern
+        //        Put all the code between BEGIN mission and END mission in a method runAutoZoneA()
+        //        Add logic to execute different zone
+        // eg,
+        //        if (ringPattern == "quad")
+        //           runAutoZoneA();
+
+        // BEGIN mission
+        robot.followTrajectory((trajectoryZoneA1));
 
         robot.getShooter().burstPoker();
 
-        robot.followTrajectory((trajectoryzoneA3));
+        robot.resumeTrajectory((trajectoryZoneA1));
+
+        // TODO : Create dropWobbleGoal() method so it can be reused
         robot.getGrabber().armDown();
         sleep(350);
         robot.getGrabber().openGrabber();
-        sleep(1000);
+        sleep(1000);    // TODO : calcuate optimal time to wait for the grabber to open (hint, goBilda Torque servo)
 
-        robot.followTrajectory((trajectoryzoneA4));
+        robot.resumeTrajectory((trajectoryZoneA1));
+
+        // TODO : Create grabWobbleGoal() method so it can be reused
         robot.getGrabber().closeGrabber();
         sleep(1000);
         robot.getGrabber().armUp();
 
-        robot.followTrajectory((trajectoryzoneA5));
+        robot.resumeTrajectory((trajectoryZoneA1));
+
+        // TODO : Update methold to use dropWobbleGoal()
         robot.getGrabber().armDown();
         sleep(350);
         robot.getGrabber().openGrabber();
         sleep(1000);
 
+        // TODO : Park the robot
+
+        // END mission
 
 
  /*       robot.getGrabber().openGrabber();

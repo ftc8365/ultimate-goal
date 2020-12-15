@@ -54,6 +54,7 @@ public class Grabber {
         servoArm1.setPosition(pos);
         servoArm2.setPosition(1-pos);
     }
+
     public void armDownAuto() {
         double pos  = 0.1;
         servoArm1.setPosition( pos );

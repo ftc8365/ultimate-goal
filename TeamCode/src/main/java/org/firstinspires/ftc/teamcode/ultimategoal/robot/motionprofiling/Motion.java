@@ -15,13 +15,23 @@ public class Motion {
     private final double    distance;
     private final int       targetHeading;
 
-    private  Constraint     constraint;
+    private Constraint      constraint;
+    private boolean         completed;
 
     Motion(Type type, double distance, int targetHeading, Constraint constraint ) {
         this.type           = type;
         this.distance       = distance;
         this.targetHeading  = targetHeading;
         this.constraint     = constraint;
+        this.completed      = false;
+    }
+
+    public void setCompleted() {
+        this.completed = true;
+    }
+
+    public boolean isCompleted() {
+        return this.completed;
     }
 
     public Type getType() {
