@@ -52,17 +52,18 @@ public class PIDController {
 
         // Ramp down power
         if ( rampDown && (ticksToGo <= this.ticksPerWheelRotation) ) {
-            power = ( ticksToGo / this.ticksPerWheelRotation)  * curPower * 0.5;
-
-            if (power < this.MIN_DRIVE_POWER)
+            power = ( ticksToGo / this.ticksPerWheelRotation ) * curPower * 0.5;
+            if (power < MIN_DRIVE_POWER)
                 power = MIN_DRIVE_POWER;
-
         } else if (rampDown && (curPower > targetPower)) {
             power -= (curPower - targetPower) / 5;
+            if (power < MIN_DRIVE_POWER)
+                power = MIN_DRIVE_POWER;
         }
         else if (targetPower - power > 0.001) {
             power += this.RAMP_UP_RATE_DRIVE;
         }
+
 
         return power;
     }
@@ -76,13 +77,13 @@ public class PIDController {
         // Ramp down power
         if ( range <= RAMP_DOWN_DRIVE_RANGE ) {
             power = ( range / RAMP_DOWN_DRIVE_RANGE)  * curPower;
-
-            if (power < this.MIN_DRIVE_POWER)
-                power = MIN_DRIVE_POWER;
         }
         else if (targetPower - power > 0.001) {
             power += this.RAMP_UP_RATE_DRIVE;
         }
+
+        if (power < MIN_DRIVE_POWER)
+            power = MIN_DRIVE_POWER;
 
         return power;
     }
@@ -93,11 +94,11 @@ public class PIDController {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public double getTurnPower( double curPower, double degreesToGo, double targetPower, boolean rampDown ) {
         double power = curPower;
-        double RAMP_DOWN_DISTANCE = 30;
+        double RAMP_DOWN_DEGREES = 30;
 
         // Ramp down power
-        if ( rampDown && (degreesToGo <= RAMP_DOWN_DISTANCE) ) {
-            power = ( degreesToGo / RAMP_DOWN_DISTANCE)  * curPower * 0.5;
+        if ( rampDown && (degreesToGo <= RAMP_DOWN_DEGREES) ) {
+            power = ( degreesToGo / RAMP_DOWN_DEGREES)  * curPower * 0.5;
 
             if (power < MIN_TURN_POWER)
                 power = MIN_TURN_POWER;
@@ -105,6 +106,7 @@ public class PIDController {
         else if (targetPower - power > 0.001) {
             power += this.RAMP_UP_RATE_TURN;
         }
+
         return power;
     }
 

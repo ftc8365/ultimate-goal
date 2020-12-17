@@ -60,6 +60,11 @@ public class Intake {
 
     }
 
+    public void stop() {
+        motorIntake.setPower(0.0);
+        motorIntakeLift.setPower(0.0);
+    }
+
     public void intake() {
         motorIntake.setPower(0.30);
         motorIntakeLift.setPower(0.5);
@@ -68,11 +73,6 @@ public class Intake {
     public void outake() {
         motorIntake.setPower(-0.5);
         motorIntakeLift.setPower(0.25);
-    }
-
-    public void turnOff() {
-        motorIntake.setPower(0.0);
-        motorIntakeLift.setPower(0.0);
     }
 
     public void liftBasket() {

@@ -107,7 +107,7 @@ public class ComputerVision {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void shutdown() {
+    public void stop() {
         if (tfod != null) {
             tfod.shutdown();
         }

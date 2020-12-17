@@ -101,7 +101,7 @@ public class Shooter {
     }
 
     public void stop() {
-        setState( ShooterState.SHOOTER_OFF );
+        motorShooter.setPower(0);
     }
 
     public double getPower() {

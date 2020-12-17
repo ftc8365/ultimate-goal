@@ -15,10 +15,11 @@ public class MecanumDriveTrain {
     // Declare constants
     //////////////////////////////////////////////////////////////////////
 
-    public final double ODOMETRY_WHEEL_RADIUS              = 1.49606 / 2;       // Nexus Omni wheel is 38mm in diagram, convert to inches
-    public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION  = 1440;              // Based on E8T encoder spec
-    public final int    ODOMETRY_WHEEL_TICKS_PER_INCH      = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
-    public final double ODOMETRY_WHEEL_DIAMETER            = 13.40;             // Width of left & right odometer wheels
+    public final double ODOMETRY_WHEEL_RADIUS               = 1.49606 / 2;       // Nexus Omni wheel is 38mm in diagram, convert to inches
+    public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION   = 1440;              // Based on E8T encoder spec
+    public final int    ODOMETRY_WHEEL_TICKS_PER_INCH       = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
+    public final double ODOMETRY_WHEEL_DIAMETER             = 13.40;             // Width of left & right odometer wheels
+    public final double TURN_TOLERANCE_IN_DEGREES           = 2.0;
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare motors variables
@@ -79,10 +80,10 @@ public class MecanumDriveTrain {
         List<LynxModule> allHubs = robot.opMode.hardwareMap.getAll(LynxModule.class);
         for (LynxModule module : allHubs) {
             this.controlHub = module;
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        this.controlHub.clearBulkCache();
+        clearBulkCache();
         this.initLeftOdometryPosition   = this.getLeftOdometryPosition();
         this.initRightOdometryPosition  = this.getRightOdometryPosition();
         this.initCenterOdometryPosition = this.getCenterOdometryPosition();
@@ -98,7 +99,7 @@ public class MecanumDriveTrain {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void clearBulkCache() {
-        this.controlHub.clearBulkCache();
+        //this.controlHub.clearBulkCache();
     }
 
     public int getInitLeftOdometryPosition() {
@@ -109,25 +110,29 @@ public class MecanumDriveTrain {
         return this.initRightOdometryPosition;
     }
 
-    public double getCurrentPositionInDegrees() {
-        return getCurrentPositionInDegreesUsingOdometry();
-    }
+//    public double getCurrentPositionInDegrees() {
+//        return getCurrentPositionInDegreesUsingOdometry();
+//    }
 
     // Using only motor encoders (via odometry), we can get rate of 300 cycles per second
     // adding gyro sensor, the rate reduce to 80 per second
     //
     public double getCurrentPositionInDegreesUsingOdometry() {
-        int left    = this.getLeftOdometryPosition() - getInitLeftOdometryPosition();
-        int right   = this.getRightOdometryPosition() - getInitRightOdometryPosition();
+        return getCurrentPositionInDegreesUsingOdometry(this.getRightOdometryPosition(), this.getLeftOdometryPosition());
+    }
+
+    public double getCurrentPositionInDegreesUsingOdometry(int rightPosition, int leftPosition) {
+        int left    = leftPosition - getInitLeftOdometryPosition();
+        int right   = rightPosition - getInitRightOdometryPosition();
         int diff    = left - right;
 
-        double heading = 180 * diff/(ODOMETRY_WHEEL_TICKS_PER_INCH*(ODOMETRY_WHEEL_DIAMETER*Math.PI));
+        double heading = 180 * diff/(ODOMETRY_WHEEL_TICKS_PER_INCH * (ODOMETRY_WHEEL_DIAMETER * Math.PI));
 
         if (heading < 0){
             heading = 360 + heading;
         }
         if (heading > 360){
-           heading = heading % 360;
+            heading = heading % 360;
         }
         return heading;
     }
@@ -143,9 +148,9 @@ public class MecanumDriveTrain {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // stopAllMotors
+    // stop All Motors
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void stopDriveMotors() {
+    public void stop() {
         this.curDrivePower = 0;
         this.motorFR.setPower(0);
         this.motorFL.setPower(0);
@@ -179,11 +184,19 @@ public class MecanumDriveTrain {
     // driveForwardTillRotation
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void driveForwardTillTicks(int targetTicks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors) {
+
         clearBulkCache();
-        int initPosition = getRightOdometryPosition();
+
+        int initRightPosition = getRightOdometryPosition();
+        int initLeftPosition  = getLeftOdometryPosition();
 
         while (robot.continueMotion()) {
-            int ticksToGo = targetTicks - (getRightOdometryPosition() - initPosition);
+            int leftPosition  = this.getRightOdometryPosition();
+            int rightPosition = this.getLeftOdometryPosition();
+
+            int ticksMoved = ((rightPosition - initRightPosition) + (leftPosition - initLeftPosition) ) / 2 ;
+
+            int ticksToGo = targetTicks - ticksMoved;
             if (ticksToGo <= 0)
                 break;
 
@@ -195,7 +208,7 @@ public class MecanumDriveTrain {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            double currentPosition = this.getCurrentPositionInDegrees();
+            double currentPosition = this.getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition);
             double headingChange = currentPosition - targetHeading;
 
             if (headingChange > 180 && targetHeading <= 30) {
@@ -214,7 +227,7 @@ public class MecanumDriveTrain {
         }
 
         if (stopMotors) {
-            this.stopDriveMotors();
+            stop();
         }
     }
 
@@ -226,15 +239,21 @@ public class MecanumDriveTrain {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void driveBackwardTillTicks( int ticks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
+    public void driveBackwardTillTicks( int targetTicks, double targetPower, int targetHeading, boolean rampDown, boolean stopMotors ) {
         this.clearBulkCache();
 
-        int initPosition        = getRightOdometryPosition();
+        int initRightPosition   = getRightOdometryPosition();
+        int initLeftPosition    = getLeftOdometryPosition();
         int ticksToGo           = 0;
         double startingTime     = 0;
 
         while (robot.continueMotion()) {
-            ticksToGo = ticks - (initPosition - getRightOdometryPosition());
+            int leftPosition  = this.getRightOdometryPosition();
+            int rightPosition = this.getLeftOdometryPosition();
+
+            int ticksMoved = ((rightPosition - initRightPosition) + (leftPosition - initLeftPosition) ) / 2 ;
+
+            ticksToGo = targetTicks - (ticksMoved);
             if (ticksToGo <= 0)
                 break;
 
@@ -245,7 +264,7 @@ public class MecanumDriveTrain {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            double currentPosition = this.getCurrentPositionInDegrees();
+            double currentPosition = this.getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition);
             double headingChange   = currentPosition - targetHeading;
 
             if (headingChange > 180 && targetHeading == 0) {
@@ -263,7 +282,7 @@ public class MecanumDriveTrain {
         }
 
         if (stopMotors) {
-            stopDriveMotors();
+            stop();
         }
     }
 
@@ -292,7 +311,7 @@ public class MecanumDriveTrain {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            double currentPosition = this.getCurrentPositionInDegrees();
+            double currentPosition = this.getCurrentPositionInDegreesUsingOdometry();
             double headingChange   = currentPosition - targetHeading;
 
             if (headingChange > 180 && targetHeading == 0) {
@@ -310,7 +329,7 @@ public class MecanumDriveTrain {
         }
 
         if (stopMotors) {
-            stopDriveMotors();
+            stop();
         }
     }
 
@@ -339,7 +358,7 @@ public class MecanumDriveTrain {
 
             // Adjusting motor power based on gyro position
             // to force the robot to move straight
-            double currentPosition = this.getCurrentPositionInDegrees();
+            double currentPosition = this.getCurrentPositionInDegreesUsingOdometry();
             double headingChange   = currentPosition - targetHeading;
 
             if (headingChange > 180 && targetHeading == 0) {
@@ -357,7 +376,7 @@ public class MecanumDriveTrain {
         }
 
         if (stopMotors) {
-            stopDriveMotors();
+            stop();
         }
     }
 
@@ -367,16 +386,16 @@ public class MecanumDriveTrain {
     public void turnRightTillDegrees( int targetDegrees, double targetPower, boolean rampDown, boolean stopMotors ) {
         double currentHeading   = 0;
         double degressToGo      = 0;
-        double TURN_TOLERANCE   = 5.0;
 
         while (robot.continueMotion()) {
             this.clearBulkCache();
-            currentHeading = getCurrentPositionInDegrees();
+
+            currentHeading = getCurrentPositionInDegreesUsingOdometry();
             if (currentHeading > 180 && targetDegrees < 180)
                 currentHeading -= 360;
 
             degressToGo = targetDegrees - currentHeading;
-            if (degressToGo <= TURN_TOLERANCE)
+            if (degressToGo <= TURN_TOLERANCE_IN_DEGREES)
                 break;
 
             this.curDrivePower = pidController.getTurnPower(this.curDrivePower, degressToGo, targetPower, rampDown);
@@ -388,7 +407,7 @@ public class MecanumDriveTrain {
         }
 
         if (stopMotors) {
-            this.stopDriveMotors();
+            stop();
         }
     }
 
@@ -396,19 +415,20 @@ public class MecanumDriveTrain {
     // turnLeftTillDegrees
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void turnLeftTillDegrees( int targetDegrees, double targetPower, boolean rampDown, boolean stopMotors ) {
-        double currentHeading = 0;
-        double degressToGo = 0;
+        double currentHeading   = 0;
+        double degressToGo      = 0;
 
         while (robot.continueMotion()) {
             this.clearBulkCache();
-            currentHeading = getCurrentPositionInDegrees();
+
+            currentHeading = getCurrentPositionInDegreesUsingOdometry();
 
             degressToGo = currentHeading - targetDegrees;
 
             if (degressToGo < -120)
                 degressToGo += 360;
 
-            if (degressToGo <= 0.5)
+            if (degressToGo <= TURN_TOLERANCE_IN_DEGREES)
                 break;
 
             this.curDrivePower = pidController.getTurnPower(this.curDrivePower, degressToGo, targetPower, rampDown);
@@ -420,7 +440,7 @@ public class MecanumDriveTrain {
         }
 
         if (stopMotors) {
-            this.stopDriveMotors();
+            stop();
         }
     }
 

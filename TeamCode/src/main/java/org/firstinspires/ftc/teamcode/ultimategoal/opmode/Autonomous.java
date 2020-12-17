@@ -51,7 +51,6 @@ public class Autonomous extends LinearOpMode {
                 .moveForward( 33 )
                 .build();
 
-
 /*
 
 
@@ -109,13 +108,13 @@ public class Autonomous extends LinearOpMode {
 
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
         robot.getComputerVision().activate();;
-        robot.getIntake().liftBasket();
-        robot.getGrabber().closeGrabber();
+//        robot.getIntake().liftBasket();
+//        robot.getGrabber().closeGrabber();
 
         while (inInitializationState()) {
             robot.getDriveTrain().clearBulkCache();
 
-            ringPatten = robot.getComputerVision().detect();
+//            ringPatten = robot.getComputerVision().detect();
 
             telemetry.addData("ring pattern",   ringPatten);
             telemetry.addData("", "------------------------------");
@@ -134,7 +133,7 @@ public class Autonomous extends LinearOpMode {
             telemetry.update();
         }
 
-        robot.getComputerVision().shutdown();
+        robot.getComputerVision().stop();
 
         if (!opModeIsActive() || isStopRequested())
             return;
@@ -184,10 +183,12 @@ public class Autonomous extends LinearOpMode {
         robot.getGrabber().openGrabber();
         sleep(1000);
 
-        // TODO : Park the robot
 
         // END mission
 
+        robot.getDriveTrain().stop();
+        robot.getShooter().stop();
+        robot.getIntake().stop();
 
  /*       robot.getGrabber().openGrabber();
         sleep(1000);

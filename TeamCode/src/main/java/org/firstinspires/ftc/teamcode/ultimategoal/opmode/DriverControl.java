@@ -45,7 +45,7 @@ public class DriverControl extends LinearOpMode {
         }
 
         robot.getShooter().stop();
-        robot.getDriveTrain().stopDriveMotors();
+        robot.getDriveTrain().stop();
     }
 
 
@@ -88,7 +88,7 @@ public class DriverControl extends LinearOpMode {
         } else if (gamepad1.left_trigger > 0) {
             robot.getIntake().outake();
         } else {
-            robot.getIntake().turnOff();
+            robot.getIntake().stop();
         }
 
         if (gamepad1.y) {

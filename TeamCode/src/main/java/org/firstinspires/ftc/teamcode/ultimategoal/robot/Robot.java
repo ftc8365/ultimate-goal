@@ -155,7 +155,7 @@ public class Robot {
                                                     motion.getConstraint().getStopMotor() );
                 break;
             case STOP:
-                getDriveTrain().stopDriveMotors();
+                getDriveTrain().stop();
                 break;
         }
 

@@ -14,7 +14,6 @@ public class Grabber {
     // Declare Servos
     ////////////////////////////////////////////////////////////////////////////////////
     Servo           servoGrabber;
-
     Servo           servoArm1;
     Servo           servoArm2;
 

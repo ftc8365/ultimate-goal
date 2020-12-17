@@ -84,5 +84,4 @@ public class TrajectoryBuilder {
         trajectory.getMotions().add( new Motion( Motion.Type.STOP, 0, -1, this.defaultConstraint ) );
         return this.trajectory;
     }
-
 }
