@@ -45,7 +45,7 @@ public class Autonomous extends LinearOpMode {
                 .stop()
                 .moveBackward( 36 )
                 .turnRight( 180 )
-                .moveForward( 21 )
+                .moveForward( 23 )
                 .stop()
                 .moveBackward( 21 )
                 .turnLeft( 60 )
