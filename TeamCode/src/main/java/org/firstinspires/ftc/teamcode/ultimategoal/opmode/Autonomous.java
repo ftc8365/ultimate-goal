@@ -37,7 +37,7 @@ public class Autonomous extends LinearOpMode {
 
         Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
                 .setDefaultTargetPower( 0.40 )
-                .moveForward( 62 )
+                .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
                 .turnRight( 60 )
