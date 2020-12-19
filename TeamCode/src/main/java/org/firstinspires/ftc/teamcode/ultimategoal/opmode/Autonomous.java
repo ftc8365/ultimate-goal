@@ -193,45 +193,6 @@ public class Autonomous extends LinearOpMode {
         robot.getShooter().stop();
         robot.getIntake().stop();
 
- /*       robot.getGrabber().openGrabber();
-        sleep(1000);
-        robot.getGrabber().armDown();
-        sleep(1000);
-        robot.getGrabber().closeGrabber();
-        sleep(1000);
-        robot.getGrabber().armUp();
-        sleep(1000);
-
-        robot.followTrajectory(trajectoryzoneA1);
-
-        robot.getGrabber().armDown();
-        sleep(1000);
-        robot.getGrabber().openGrabber();
-        sleep(1000);
-        robot.getGrabber().armUp();
-        sleep(1000);
-
-        robot.followTrajectory((trajectoryzoneA2));
-
-        robot.getGrabber().openGrabber();
-        sleep(1000);
-        robot.getGrabber().armDown();
-        sleep(1000);
-        robot.getGrabber().closeGrabber();
-        sleep(1000);
-        robot.getGrabber().armUp();
-        sleep(1000);
-
-        robot.followTrajectory((trajectoryzoneA3));
-
-        robot.getGrabber().armDown();
-        sleep(1000);
-        robot.getGrabber().openGrabber();
-        sleep(1000);
-        robot.getGrabber().armUp();
-        sleep(1000);
-        
-*/
     }
 
 }
