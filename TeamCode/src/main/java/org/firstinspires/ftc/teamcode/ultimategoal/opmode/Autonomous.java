@@ -208,21 +208,33 @@ public class Autonomous extends LinearOpMode {
                 .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
-                .turnRight( 60 )
-                .moveForward( 2 )
+                .turnRight( 0 )
+                .moveForward( 24 )
                 .stop()
-                .moveBackward( 36 )
+                .moveBackward( 24 )
+                .turnRight( 60 )
+                .moveBackward( 34 )
                 .turnRight( 180 )
                 .moveForward( 24 )
                 .stop()
-                .moveBackward( 21 )
+                .moveBackward( 24 )
                 .turnLeft( 60 )
-                .moveForward( 33 )
+                .moveForward( 31 )
+                .turnLeft( 0 )
+                .moveForward( 24 )
                 .build();
 
         robot.followTrajectory((trajectoryZoneB));
 
         robot.getShooter().burstPoker();
+
+        robot.resumeTrajectory((trajectoryZoneB));
+
+        dropWobbleGoal();
+
+        robot.resumeTrajectory((trajectoryZoneB));
+
+        grabWobbleGoal();
 
         robot.resumeTrajectory((trajectoryZoneB));
 
@@ -237,6 +249,16 @@ public class Autonomous extends LinearOpMode {
                 .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
+                .turnRight( 90 )
+                .moveForward( 26 )
+                .stop()
+                .moveBackward( 36 )
+                .turnRight( 180 )
+                .moveForward( 24 )
+                .stop()
+                .moveBackward( 21 )
+                .turnLeft( 60 )
+                .moveForward( 33 )
                 .build();
 
         robot.followTrajectory((trajectoryZoneC));
