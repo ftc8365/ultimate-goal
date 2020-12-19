@@ -38,7 +38,7 @@ public class Autonomous extends LinearOpMode {
         Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
                 .setDefaultTargetPower( 0.30 )
                 .moveForward( 62 )
-                .turnLeft( 345 )
+                .turnLeft( 340 )
                 .stop()
                 .turnRight( 60 )
                 .stop()
@@ -136,6 +136,12 @@ public class Autonomous extends LinearOpMode {
             telemetry.update();
         }
 
+        //public void dropWobbleGoal() {
+           // robot.getGrabber().armDown();
+        //    sleep(350);
+        ///    robot.getGrabber().openGrabber();
+          ///  sleep(1000);
+       // }
         robot.getComputerVision().stop();
 
         if (!opModeIsActive() || isStopRequested())
@@ -165,11 +171,11 @@ public class Autonomous extends LinearOpMode {
 
         robot.resumeTrajectory((trajectoryZoneA1));
 
-        // TODO : Create dropWobbleGoal() method so it can be reused
         robot.getGrabber().armDown();
         sleep(350);
         robot.getGrabber().openGrabber();
-        sleep(1000);    // TODO : calcuate optimal time to wait for the grabber to open (hint, goBilda Torque servo)
+        sleep(1000);
+            // TODO : calcuate optimal time to wait for the grabber to open (hint, goBilda Torque servo)
 
         robot.resumeTrajectory((trajectoryZoneA1));
 
