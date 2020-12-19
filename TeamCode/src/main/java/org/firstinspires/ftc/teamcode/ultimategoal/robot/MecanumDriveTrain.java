@@ -19,7 +19,7 @@ public class MecanumDriveTrain {
     public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION   = 1440;              // Based on E8T encoder spec
     public final int    ODOMETRY_WHEEL_TICKS_PER_INCH       = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
     public final double ODOMETRY_WHEEL_DIAMETER             = 13.40;             // Width of left & right odometer wheels
-    public final double TURN_TOLERANCE_IN_DEGREES           = 2.0;
+    public final double TURN_TOLERANCE_IN_DEGREES           = 1.5;
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare motors variables
@@ -191,8 +191,8 @@ public class MecanumDriveTrain {
         int initLeftPosition  = getLeftOdometryPosition();
 
         while (robot.continueMotion()) {
-            int leftPosition  = this.getRightOdometryPosition();
-            int rightPosition = this.getLeftOdometryPosition();
+            int rightPosition  = this.getRightOdometryPosition();
+            int leftPosition = this.getLeftOdometryPosition();
 
             int ticksMoved = ((rightPosition - initRightPosition) + (leftPosition - initLeftPosition) ) / 2 ;
 
@@ -244,14 +244,19 @@ public class MecanumDriveTrain {
 
         int initRightPosition   = getRightOdometryPosition();
         int initLeftPosition    = getLeftOdometryPosition();
+        int rightPosition       = initRightPosition;
+        int leftPosition        = initLeftPosition;
         int ticksToGo           = 0;
-        double startingTime     = 0;
+        int counter             = 0;
 
         while (robot.continueMotion()) {
-            int leftPosition  = this.getRightOdometryPosition();
-            int rightPosition = this.getLeftOdometryPosition();
+            if (counter > 0) {
+                rightPosition = this.getRightOdometryPosition();
+                leftPosition = this.getLeftOdometryPosition();
+            }
 
-            int ticksMoved = ((rightPosition - initRightPosition) + (leftPosition - initLeftPosition) ) / 2 ;
+            // Take the average of the left & right odometry position to determine ticksMoved
+            int ticksMoved = ((initRightPosition - rightPosition) + (initLeftPosition - leftPosition) ) / 2 ;
 
             ticksToGo = targetTicks - (ticksMoved);
             if (ticksToGo <= 0)
@@ -279,6 +284,7 @@ public class MecanumDriveTrain {
             motorBL.setPower( powerLeft * -1);
 
             clearBulkCache();
+            counter ++;
         }
 
         if (stopMotors) {

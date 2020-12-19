@@ -36,8 +36,8 @@ public class Autonomous extends LinearOpMode {
         robot.getComputerVision().init();
 
         Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
-                .setDefaultTargetPower( 50 )
-                .moveForward( 60 )
+                .setDefaultTargetPower( 0.30 )
+                .moveForward( 62 )
                 .turnLeft( 345 )
                 .stop()
                 .turnRight( 60 )
@@ -108,23 +108,26 @@ public class Autonomous extends LinearOpMode {
 
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
         robot.getComputerVision().activate();;
-//        robot.getIntake().liftBasket();
-//        robot.getGrabber().closeGrabber();
+        robot.getIntake().liftBasket();
+        robot.getGrabber().closeGrabber();
 
         while (inInitializationState()) {
             robot.getDriveTrain().clearBulkCache();
 
-//            ringPatten = robot.getComputerVision().detect();
+            ringPatten = robot.getComputerVision().detect();
+
+            int leftPosition = robot.getDriveTrain().getLeftOdometryPosition();
+            int rightPosition = robot.getDriveTrain().getRightOdometryPosition();
 
             telemetry.addData("ring pattern",   ringPatten);
             telemetry.addData("", "------------------------------");
-            telemetry.addData("left",   robot.getDriveTrain().getLeftOdometryPosition());
-            telemetry.addData("right",  robot.getDriveTrain().getRightOdometryPosition());
+            telemetry.addData("left",   leftPosition);
+            telemetry.addData("right",  rightPosition);
 
-            telemetry.addData("left Chg",   robot.getDriveTrain().getLeftOdometryPosition() - robot.getDriveTrain().getInitLeftOdometryPosition());
-            telemetry.addData("right Chg",  robot.getDriveTrain().getRightOdometryPosition() - robot.getDriveTrain().getInitRightOdometryPosition());
+            telemetry.addData("left Chg",   leftPosition - robot.getDriveTrain().getInitLeftOdometryPosition());
+            telemetry.addData("right Chg",  rightPosition - robot.getDriveTrain().getInitRightOdometryPosition());
 
-            telemetry.addData("odom",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry() ));
+            telemetry.addData("odom",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition) ));
 
             telemetry.addData("", "------------------------------");
             telemetry.addData( "rate/sec",  String.format("%.2f", ++count / timer.seconds()) );
