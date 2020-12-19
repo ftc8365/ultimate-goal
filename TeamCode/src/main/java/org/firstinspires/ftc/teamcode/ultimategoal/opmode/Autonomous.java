@@ -155,7 +155,7 @@ public class Autonomous extends LinearOpMode {
         //        Put all the code between BEGIN mission and END mission in a method runAutoZoneA()
         //        Add logic to execute different zone
         // eg,
-        //        if (ringPattern == "quad")
+        //        if (ringPattern.equals("quad"))
         //           runAutoZoneA();
 
         // BEGIN mission
