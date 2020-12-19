@@ -36,13 +36,13 @@ public class Autonomous extends LinearOpMode {
         robot.getComputerVision().init();
 
         Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
-                .setDefaultTargetPower( 0.30 )
+                .setDefaultTargetPower( 0.40 )
                 .moveForward( 62 )
                 .turnLeft( 340 )
                 .stop()
                 .turnRight( 60 )
                 .stop()
-                .moveBackward( 36 )
+                .moveBackward( 35 )
                 .turnRight( 180 )
                 .moveForward( 21 )
                 .stop()
@@ -139,8 +139,8 @@ public class Autonomous extends LinearOpMode {
         //public void dropWobbleGoal() {
            // robot.getGrabber().armDown();
         //    sleep(350);
-        ///    robot.getGrabber().openGrabber();
-          ///  sleep(1000);
+        //    robot.getGrabber().openGrabber();
+          //  sleep(1000);
        // }
         robot.getComputerVision().stop();
 
