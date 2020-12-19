@@ -35,22 +35,7 @@ public class Autonomous extends LinearOpMode {
         robot.getIntake().init();
         robot.getComputerVision().init();
 
-        Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
-                .setDefaultTargetPower( 0.40 )
-                .moveForward( 60 )
-                .turnLeft( 340 )
-                .stop()
-                .turnRight( 60 )
-                .moveForward( 2 )
-                .stop()
-                .moveBackward( 36 )
-                .turnRight( 180 )
-                .moveForward( 24 )
-                .stop()
-                .moveBackward( 21 )
-                .turnLeft( 60 )
-                .moveForward( 33 )
-                .build();
+
 
 /*
 
@@ -137,12 +122,6 @@ public class Autonomous extends LinearOpMode {
             telemetry.update();
         }
 
-        //public void dropWobbleGoal() {
-           // robot.getGrabber().armDown();
-        //    sleep(350);
-        //    robot.getGrabber().openGrabber();
-          //  sleep(1000);
-       // }
         robot.getComputerVision().stop();
 
         if (!opModeIsActive() || isStopRequested())
@@ -159,47 +138,115 @@ public class Autonomous extends LinearOpMode {
         robot.getShooter().stopPoker();
 
         // TODO : Add logic to determine ring pattern
-        //        Put all the code between BEGIN mission and END mission in a method runAutoZoneA()
         //        Add logic to execute different zone
-        // eg,
-        //        if (ringPattern.equals("quad"))
-        //           runAutoZoneA();
 
-        // BEGIN mission
+        if (ringPatten.equals("None")) {
+            runAutoZoneA();
+        }else if (ringPatten.equals("Single")) {
+             runAutoZoneB();
+        }else {
+             runAutoZoneC();
+        }
+
+
+    }
+
+    public void dropWobbleGoal() {
+         robot.getGrabber().armDown();
+         sleep(350);
+         robot.getGrabber().openGrabber();
+         sleep(1000);
+    }
+    public void grabWobbleGoal() {
+        robot.getGrabber().closeGrabber();
+        sleep(1000); // TODO : calcuate optimal time to wait for the grabber to open (hint, goBilda Torque servo)
+        robot.getGrabber().armUp();
+    }
+
+    public void runAutoZoneA() {
+        Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
+                .setDefaultTargetPower( 0.40 )
+                .moveForward( 60 )
+                .turnLeft( 340 )
+                .stop()
+                .turnRight( 60 )
+                .moveForward( 2 )
+                .stop()
+                .moveBackward( 36 )
+                .turnRight( 180 )
+                .moveForward( 24 )
+                .stop()
+                .moveBackward( 21 )
+                .turnLeft( 60 )
+                .moveForward( 33 )
+                .build();
+
         robot.followTrajectory((trajectoryZoneA1));
 
         robot.getShooter().burstPoker();
 
         robot.resumeTrajectory((trajectoryZoneA1));
 
-        robot.getGrabber().armDown();
-        sleep(350);
-        robot.getGrabber().openGrabber();
-        sleep(1000);
-            // TODO : calcuate optimal time to wait for the grabber to open (hint, goBilda Torque servo)
+        dropWobbleGoal();
 
         robot.resumeTrajectory((trajectoryZoneA1));
 
-        // TODO : Create grabWobbleGoal() method so it can be reused
-        robot.getGrabber().closeGrabber();
-        sleep(1000);
-        robot.getGrabber().armUp();
+        grabWobbleGoal();
 
         robot.resumeTrajectory((trajectoryZoneA1));
 
-        // TODO : Update methold to use dropWobbleGoal()
-        robot.getGrabber().armDown();
-        sleep(350);
-        robot.getGrabber().openGrabber();
-        sleep(1000);
-
-
-        // END mission
+        dropWobbleGoal();
 
         robot.getDriveTrain().stop();
         robot.getShooter().stop();
         robot.getIntake().stop();
-
     }
 
+    public void runAutoZoneB(){
+        Trajectory trajectoryZoneB = robot.trajectoryBuilder()
+                .setDefaultTargetPower( 0.40 )
+                .moveForward( 60 )
+                .turnLeft( 340 )
+                .stop()
+                .turnRight( 60 )
+                .moveForward( 2 )
+                .stop()
+                .moveBackward( 36 )
+                .turnRight( 180 )
+                .moveForward( 24 )
+                .stop()
+                .moveBackward( 21 )
+                .turnLeft( 60 )
+                .moveForward( 33 )
+                .build();
+
+        robot.followTrajectory((trajectoryZoneB));
+
+        robot.getShooter().burstPoker();
+
+        robot.resumeTrajectory((trajectoryZoneB));
+
+        robot.getDriveTrain().stop();
+        robot.getShooter().stop();
+        robot.getIntake().stop();
+    }
+
+    public void runAutoZoneC(){
+        Trajectory trajectoryZoneC = robot.trajectoryBuilder()
+                .setDefaultTargetPower( 0.40 )
+                .moveForward( 60 )
+                .turnLeft( 340 )
+                .stop()
+                .build();
+
+        robot.followTrajectory((trajectoryZoneC));
+
+        robot.getShooter().burstPoker();
+
+        robot.resumeTrajectory((trajectoryZoneC));
+
+        robot.getDriveTrain().stop();
+        robot.getShooter().stop();
+        robot.getIntake().stop();
+    }
 }
