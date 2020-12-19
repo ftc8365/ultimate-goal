@@ -35,60 +35,6 @@ public class Autonomous extends LinearOpMode {
         robot.getIntake().init();
         robot.getComputerVision().init();
 
-
-
-/*
-
-
-        Trajectory trajectoryzoneA2x = robot.trajectoryBuilder()
-                .turnLeft( 270 )
-                .moveForward( 18 )
-                .turnLeft( 180 )
-                .moveForward( 35 )
-                .build();
-
-        Trajectory trajectoryzoneA3x = robot.trajectoryBuilder()
-                .turnLeft( 0 )
-                .moveForward( 38 )
-                .turnRight( 90 )
-                .moveForward( 14 )
-                .build();
-
-        Trajectory trajectoryzoneA4x = robot.trajectoryBuilder()
-                .moveForward( 54 )
-                .turnLeft( 270 )
-                .moveForward( 28 )
-                .turnLeft( 180 )
-                .moveForward( 28 )
-                .turnLeft( 0 )
-                .moveForward( 28 )
-                .turnRight( 90 )
-                .moveForward( 24 )
-                .build();
-
-        Trajectory trajectory3 = robot.trajectoryBuilder()
-                .moveForward( 54 )
-                .turnLeft(270)
-                .moveForward( 28 )
-                .turnLeft(180)
-                .moveForward( 28 )
-                .turnLeft(0)
-                .moveForward( 48 )
-                .build();
-
-        Trajectory trajectory4 = robot.trajectoryBuilder()
-                .moveForward( 54 )
-                .turnLeft(270)
-                .moveForward( 28 )
-                .turnLeft(180)
-                .moveForward( 28 )
-                .turnLeft(0)
-                .moveForward( 96 )
-                .turnRight(90)
-                .build();
-
-*/
-
         ElapsedTime timer = new ElapsedTime();
         int count = 0;
 
@@ -137,17 +83,16 @@ public class Autonomous extends LinearOpMode {
         robot.getGrabber().armUp();
         robot.getShooter().stopPoker();
 
-        // TODO : Add logic to determine ring pattern
-        //        Add logic to execute different zone
-
-        if (ringPatten.equals("None")) {
-            runAutoZoneA();
+        if (ringPatten.equals("Quad")) {
+            runAutoZoneC();
         }else if (ringPatten.equals("Single")) {
              runAutoZoneB();
         }else {
-             runAutoZoneC();
+             runAutoZoneA();
         }
-
+        robot.getDriveTrain().stop();
+        robot.getShooter().stop();
+        robot.getIntake().stop();
 
     }
 
@@ -155,11 +100,11 @@ public class Autonomous extends LinearOpMode {
          robot.getGrabber().armDown();
          sleep(350);
          robot.getGrabber().openGrabber();
-         sleep(1000);
+         sleep(750);
     }
     public void grabWobbleGoal() {
         robot.getGrabber().closeGrabber();
-        sleep(1000); // TODO : calcuate optimal time to wait for the grabber to open (hint, goBilda Torque servo)
+        sleep(750);
         robot.getGrabber().armUp();
     }
 
@@ -196,10 +141,6 @@ public class Autonomous extends LinearOpMode {
         robot.resumeTrajectory((trajectoryZoneA1));
 
         dropWobbleGoal();
-
-        robot.getDriveTrain().stop();
-        robot.getShooter().stop();
-        robot.getIntake().stop();
     }
 
     public void runAutoZoneB(){
@@ -237,10 +178,6 @@ public class Autonomous extends LinearOpMode {
         grabWobbleGoal();
 
         robot.resumeTrajectory((trajectoryZoneB));
-
-        robot.getDriveTrain().stop();
-        robot.getShooter().stop();
-        robot.getIntake().stop();
     }
 
     public void runAutoZoneC(){
@@ -249,10 +186,11 @@ public class Autonomous extends LinearOpMode {
                 .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
+                .turnRight( 0 )
+                .moveForward( 24 )
                 .turnRight( 90 )
-                .moveForward( 26 )
                 .stop()
-                .moveBackward( 36 )
+                .moveBackward( 24 )
                 .turnRight( 180 )
                 .moveForward( 24 )
                 .stop()
@@ -267,8 +205,5 @@ public class Autonomous extends LinearOpMode {
 
         robot.resumeTrajectory((trajectoryZoneC));
 
-        robot.getDriveTrain().stop();
-        robot.getShooter().stop();
-        robot.getIntake().stop();
     }
 }
