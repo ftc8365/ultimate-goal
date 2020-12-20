@@ -11,8 +11,6 @@ public class PIDController {
     final double MIN_DRIVE_POWER        = 0.15;
     final double MIN_TURN_POWER         = 0.20;
     final double MIN_STRAFE_POWER       = 0.30;
-    final double TURN_POWER             = 0.70;
-    final double TURN_TOLERANCE         = 5.0;
 
     final int ticksPerWheelRotation;
     final double rampDownDriveTicks;
@@ -68,44 +66,22 @@ public class PIDController {
         return power;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // getDrivePower
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public double getDriveRangePowerX( double curPower, double range, double targetPower ) {
-        double power = curPower;
-
-        // Ramp down power
-        if ( range <= RAMP_DOWN_DRIVE_RANGE ) {
-            power = ( range / RAMP_DOWN_DRIVE_RANGE)  * curPower;
-        }
-        else if (targetPower - power > 0.001) {
-            power += this.RAMP_UP_RATE_DRIVE;
-        }
-
-        if (power < MIN_DRIVE_POWER)
-            power = MIN_DRIVE_POWER;
-
-        return power;
-    }
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // getTurnPower
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public double getTurnPower( double curPower, double degreesToGo, double targetPower, boolean rampDown ) {
         double power = curPower;
-        double RAMP_DOWN_DEGREES = 30;
 
         // Ramp down power
-        if ( rampDown && (degreesToGo <= RAMP_DOWN_DEGREES) ) {
-            power = ( degreesToGo / RAMP_DOWN_DEGREES)  * curPower * 0.5;
-
-            if (power < MIN_TURN_POWER)
-                power = MIN_TURN_POWER;
-        }
-        else if (targetPower - power > 0.001) {
+        if ( rampDown && (degreesToGo <= RAMP_DOWN_TURN_DEGREES) ) {
+            power = ( degreesToGo / RAMP_DOWN_TURN_DEGREES)  * curPower * 0.5;
+        } else if (targetPower - power > 0.001) {
             power += this.RAMP_UP_RATE_TURN;
         }
+
+        if (power < MIN_TURN_POWER)
+            power = MIN_TURN_POWER;
 
         return power;
     }

@@ -18,8 +18,7 @@ public class MecanumDriveTrain {
     public final double ODOMETRY_WHEEL_RADIUS               = 1.49606 / 2;       // Nexus Omni wheel is 38mm in diagram, convert to inches
     public final int    ODOMETRY_WHEEL_TICKS_PER_ROTATION   = 1440;              // Based on E8T encoder spec
     public final int    ODOMETRY_WHEEL_TICKS_PER_INCH       = (int)((double)ODOMETRY_WHEEL_TICKS_PER_ROTATION / (Math.PI * ODOMETRY_WHEEL_RADIUS * 2));
-    public final double ODOMETRY_WHEEL_DIAMETER             = 13.40;             // Width of left & right odometer wheels
-    public final double TURN_TOLERANCE_IN_DEGREES           = 1.5;
+    public final double ODOMETRY_WHEEL_DIAMETER             = 13.41;             // Width of left & right odometer wheels
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Declare motors variables
@@ -386,30 +385,57 @@ public class MecanumDriveTrain {
         }
     }
 
+    private double getDegreesToGo( double currentHeading, int targetHeading, boolean turningRight ) {
+        double degreesToGo = (targetHeading - currentHeading) * (turningRight? 1 : -1);
+        if (degreesToGo < 0)
+            degreesToGo += 360;
+
+        return degreesToGo;
+    }
+
+    double getTurnTolerance( double turnPower ) {
+        if (turnPower >= 0.40)
+            return 2.5;
+        else if (turnPower >= 0.30)
+            return 1.5;
+
+        return 0.5;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // turnRightTillDegrees
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void turnRightTillDegrees( int targetDegrees, double targetPower, boolean rampDown, boolean stopMotors ) {
-        double currentHeading   = 0;
-        double degressToGo      = 0;
+    public void turnRightTillDegrees( int targetHeading, double targetPower, boolean rampDown, boolean stopMotors ) {
+        int rightPosition       = getRightOdometryPosition();
+        int leftPosition        = getLeftOdometryPosition();
+        int counter             = 0;
+
+        double currentHeading   = getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition);
+        double degreesToGo      = getDegreesToGo( currentHeading, targetHeading, true);
+        double turnTolerance    = getTurnTolerance( degreesToGo );
 
         while (robot.continueMotion()) {
             this.clearBulkCache();
 
-            currentHeading = getCurrentPositionInDegreesUsingOdometry();
-            if (currentHeading > 180 && targetDegrees < 180)
-                currentHeading -= 360;
+            if (counter > 0) {
+                rightPosition = getRightOdometryPosition();
+                leftPosition = getLeftOdometryPosition();
 
-            degressToGo = targetDegrees - currentHeading;
-            if (degressToGo <= TURN_TOLERANCE_IN_DEGREES)
+                currentHeading = getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition);
+                degreesToGo  = getDegreesToGo( currentHeading, targetHeading, true);
+            }
+
+            this.curDrivePower = pidController.getTurnPower(this.curDrivePower, degreesToGo, targetPower, rampDown);
+
+            if (degreesToGo <= getTurnTolerance(this.curDrivePower))
                 break;
-
-            this.curDrivePower = pidController.getTurnPower(this.curDrivePower, degressToGo, targetPower, rampDown);
 
             motorFR.setPower( -1 * this.curDrivePower );
             motorFL.setPower(      this.curDrivePower );
             motorBR.setPower( -1 * this.curDrivePower );
             motorBL.setPower(      this.curDrivePower );
+
+            counter++;
         }
 
         if (stopMotors) {
@@ -420,29 +446,37 @@ public class MecanumDriveTrain {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // turnLeftTillDegrees
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void turnLeftTillDegrees( int targetDegrees, double targetPower, boolean rampDown, boolean stopMotors ) {
-        double currentHeading   = 0;
-        double degressToGo      = 0;
+    public void turnLeftTillDegrees( int targetHeading, double targetPower, boolean rampDown, boolean stopMotors ) {
+        int rightPosition       = getRightOdometryPosition();
+        int leftPosition        = getLeftOdometryPosition();
+        int counter             = 0;
+
+        double currentHeading  = getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition);
+        double degreesToGo     = getDegreesToGo( currentHeading, targetHeading, false);
+        double turnTolerance    = getTurnTolerance( degreesToGo );
 
         while (robot.continueMotion()) {
             this.clearBulkCache();
 
-            currentHeading = getCurrentPositionInDegreesUsingOdometry();
+            if (counter > 0) {
+                rightPosition = getRightOdometryPosition();
+                leftPosition = getLeftOdometryPosition();
 
-            degressToGo = currentHeading - targetDegrees;
+                currentHeading = getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition);
+                degreesToGo  = getDegreesToGo( currentHeading, targetHeading, false);
+            }
 
-            if (degressToGo < -120)
-                degressToGo += 360;
+            this.curDrivePower = pidController.getTurnPower(this.curDrivePower, degreesToGo, targetPower, rampDown);
 
-            if (degressToGo <= TURN_TOLERANCE_IN_DEGREES)
+            if (degreesToGo <= getTurnTolerance(this.curDrivePower))
                 break;
-
-            this.curDrivePower = pidController.getTurnPower(this.curDrivePower, degressToGo, targetPower, rampDown);
 
             motorFR.setPower(      this.curDrivePower );
             motorFL.setPower( -1 * this.curDrivePower );
             motorBR.setPower(      this.curDrivePower );
             motorBL.setPower( -1 * this.curDrivePower );
+
+            counter++;
         }
 
         if (stopMotors) {

@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.ultimategoal.robot.*;
 public class DriverControl extends LinearOpMode {
     Robot robot = new Robot(this);
 
-//    double DRIVE_NORMAL_POWER_RATIO = 1.00;
-    double DRIVE_NORMAL_POWER_RATIO = 0.60;
+    double DRIVE_NORMAL_POWER_RATIO = 1.00;
+//    double DRIVE_NORMAL_POWER_RATIO = 0.60;
     double DRIVE_LOW_POWER_RATIO    = 0.30;
-//    double TURN_NORMAL_POWER_RATIO  = 0.75;
-    double TURN_NORMAL_POWER_RATIO  = 0.50;
+    double TURN_NORMAL_POWER_RATIO  = 0.75;
+//    double TURN_NORMAL_POWER_RATIO  = 0.50;
     double TURN_LOW_POWER_RATIO     = 0.25;
 
     boolean driveNormalMode = true;
