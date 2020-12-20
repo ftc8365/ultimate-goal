@@ -36,10 +36,8 @@ public class DriverControl extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            operateShooter();
             operateDriveTrain();
-            operateGrabber();
-            operateIntake();
+            operateControls();
 
             telemetry.update();
         }
@@ -51,13 +49,24 @@ public class DriverControl extends LinearOpMode {
 
     //////////////////////////////////////////////////////////////
     //
-    // dpad_left  : Opens grabber
-    // dpad_right : Closes grabber
-    // dpad_up    : Extends Arm Forward
-    // dpad_down  : Retracts Arm Backward
+    // dpad_left     : Opens grabber
+    // dpad_right    : Closes grabber
+    // dpad_up       : Extends Arm Up & Backward
+    // dpad_down     : Retracts Arm Down & Forward
+    //
+    // right_trigger : intake
+    // left_trigger  : outtake
+    // left_bumper   : stop poker
+    // right_bumper  : push poker
+    //
+    // y             : Raises basket + Shooter State 1
+    // b             : turns Shooter off
+    // x             : bursts poker
+    // a             :
     //
     //////////////////////////////////////////////////////////////
-    void operateGrabber() {
+
+    void operateControls() {
         if (gamepad1.dpad_left) {
             robot.getGrabber().openGrabber();
         } else if (gamepad1.dpad_right) {
@@ -67,15 +76,7 @@ public class DriverControl extends LinearOpMode {
         } else if (gamepad1.dpad_down) {
             robot.getGrabber().armDown();
         }
-    }
 
-    //////////////////////////////////////////////////////////////
-    //
-    // right_trigger : intake
-    // left_trigger  : outtake
-    //
-    //////////////////////////////////////////////////////////////
-    void operateIntake() {
         if (gamepad1.right_trigger > 0) {
             if (robot.getIntake().isBasketUp()) {
                 robot.getShooter().stopPoker();
@@ -98,19 +99,8 @@ public class DriverControl extends LinearOpMode {
             robot.getIntake().lowerBasket();
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
         }
-    }
 
-
-    //////////////////////////////////////////////////////////////
-    //
-    // y  : Shooter State 1
-    // a  : Shooter State 2
-    // b  : Shooter off
-    //
-    //////////////////////////////////////////////////////////////
-    void operateShooter() {
-
-        if (gamepad1.right_bumper ){
+        if (gamepad1.right_bumper ) {
             robot.getShooter().pushPoker();
         }
         else if (gamepad1.left_bumper){
@@ -272,6 +262,3 @@ public class DriverControl extends LinearOpMode {
     }
 
 }
-/*
-
- */

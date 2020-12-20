@@ -26,12 +26,15 @@ public class Intake {
     DcMotorEx       motorIntakeLift;
 
     //////////////////////////////////////////
+    // Declare servo variables
+    ////////////////////////////////////////////////////////////////////////////////////
     Servo           servoBasketRight;
-//    Servo           servoBasketLeft;
+
+    //////////////////////////////////////////
     // Declare reference to main robot
     //////////////////////////////////////////
-    Robot               robot;
-    boolean basketUp = false;
+    Robot           robot;
+    boolean         basketUp;
     //----------------------------------------------------------------------------------------------------------------------------------
     // Class Methods Starts Here
     //----------------------------------------------------------------------------------------------------------------------------------
@@ -41,6 +44,7 @@ public class Intake {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Intake(Robot robot ) {
         this.robot          = robot;
+        this.basketUp       = false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,8 +60,6 @@ public class Intake {
         motorIntakeLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.servoBasketRight      = robot.opMode.hardwareMap.get(Servo.class, "servoBasketRight");
-//        this.servoBasketLeft      = robot.opMode.hardwareMap.get(Servo.class, "servoBasketLeft");
-
     }
 
     public void stop() {
@@ -76,19 +78,15 @@ public class Intake {
     }
 
     public void liftBasket() {
-//        double pos = 0.80;
         double pos = 0.780;
         basketUp = true;
         servoBasketRight.setPosition(pos);
-//        servoBasketLeft.setPosition(1-pos);
     }
 
     public void lowerBasket() {
-//        double pos = 0.70;
         double pos = 0.07;
         basketUp = false;
         servoBasketRight.setPosition(pos);
-//        servoBasketLeft.setPosition(1-pos);
     }
 
     public boolean isBasketUp() {
