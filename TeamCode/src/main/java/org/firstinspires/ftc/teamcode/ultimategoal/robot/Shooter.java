@@ -74,6 +74,7 @@ public class Shooter {
         this.servoPoker = robot.opMode.hardwareMap.get(Servo.class, "servoPoker");
     }
 
+    // Full velocity = 2400, State 1 = 75%
     public void setState( ShooterState state ) {
         this.state = state;
 

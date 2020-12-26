@@ -29,6 +29,8 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() {
         String ringPatten = "";
 
+
+        // intialize robot submodules
         robot.getDriveTrain().init();
         robot.getGrabber().init();
         robot.getShooter().init();
@@ -38,6 +40,7 @@ public class Autonomous extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
         int count = 0;
 
+        // Setting drive train to float unlocks wheels to allow movemment and to confirm odometry readings are working of robot after init
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.FLOAT );
         robot.getComputerVision().activate();;
         robot.getIntake().liftBasket();
@@ -59,7 +62,7 @@ public class Autonomous extends LinearOpMode {
             telemetry.addData("left Chg",   leftPosition - robot.getDriveTrain().getInitLeftOdometryPosition());
             telemetry.addData("right Chg",  rightPosition - robot.getDriveTrain().getInitRightOdometryPosition());
 
-            telemetry.addData("odom",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition) ));
+            telemetry.addData("PosInDegrees",   String.format("%.2f",robot.getDriveTrain().getCurrentPositionInDegreesUsingOdometry(rightPosition, leftPosition) ));
 
             telemetry.addData("", "------------------------------");
             telemetry.addData( "rate/sec",  String.format("%.2f", ++count / timer.seconds()) );
