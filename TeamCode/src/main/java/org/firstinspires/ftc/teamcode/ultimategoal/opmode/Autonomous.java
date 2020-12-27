@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Robot;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.Shooter;
+import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Constraint;
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Trajectory;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Autonomous")
@@ -88,11 +89,13 @@ public class Autonomous extends LinearOpMode {
 
         if (ringPatten.equals("Quad")) {
             runAutoZoneC();
-        }else if (ringPatten.equals("Single")) {
+        } else if (ringPatten.equals("Single")) {
              runAutoZoneB();
-        }else {
+        } else {
              runAutoZoneA();
         }
+
+        robot.getGrabber().armUp();
         robot.getDriveTrain().stop();
         robot.getShooter().stop();
         robot.getIntake().stop();
@@ -113,16 +116,16 @@ public class Autonomous extends LinearOpMode {
 
     public void runAutoZoneA() {
         Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
-                .setDefaultTargetPower( 0.40 )
+                .setDefaultTargetPower( 0.50 )
                 .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
                 .turnRight( 60 )
-                .moveForward( 2 )
+                .moveForward( 3 )
                 .stop()
-                .moveBackward( 36 )
+                .moveBackward( 37 )
                 .turnRight( 180 )
-                .moveForward( 24 )
+                .moveForward( 21, 30 )
                 .stop()
                 .moveBackward( 21 )
                 .turnLeft( 60 )
@@ -148,7 +151,7 @@ public class Autonomous extends LinearOpMode {
 
     public void runAutoZoneB(){
         Trajectory trajectoryZoneB = robot.trajectoryBuilder()
-                .setDefaultTargetPower( 0.40 )
+                .setDefaultTargetPower( 0.50 )
                 .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
@@ -159,13 +162,15 @@ public class Autonomous extends LinearOpMode {
                 .turnRight( 60 )
                 .moveBackward( 34 )
                 .turnRight( 180 )
-                .moveForward( 24 )
+                .moveForward( 21, 30 )
                 .stop()
-                .moveBackward( 24 )
+                .moveBackward( 21 )
                 .turnLeft( 60 )
-                .moveForward( 31 )
+                .moveForward( 34 )
                 .turnLeft( 0 )
                 .moveForward( 24 )
+                .stop()
+                .moveBackward( 12 )
                 .build();
 
         robot.followTrajectory((trajectoryZoneB));

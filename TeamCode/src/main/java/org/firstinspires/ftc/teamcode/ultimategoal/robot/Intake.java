@@ -51,11 +51,11 @@ public class Intake {
     // initDriveMotors
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void init() {
-        motorIntake = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorIntake");  // Configure the robot to use these 4 motor names,
+        motorIntake = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorIntake");
         motorIntake.setDirection(DcMotor.Direction.REVERSE);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        motorIntakeLift = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorIntakeLift");  // Configure the robot to use these 4 motor names,
+        motorIntakeLift = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorIntakeLift");
         motorIntakeLift.setDirection(DcMotor.Direction.REVERSE);
         motorIntakeLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -68,8 +68,10 @@ public class Intake {
     }
 
     public void intake() {
-        motorIntake.setPower(0.30);
-        motorIntakeLift.setPower(0.5);
+        motorIntake.setPower(0.25);
+        motorIntakeLift.setPower(0.45);
+//        motorIntake.setVelocity(480);
+//        motorIntakeLift.setVelocity(1280);
     }
 
     public void outake() {
@@ -91,6 +93,20 @@ public class Intake {
 
     public boolean isBasketUp() {
         return basketUp;
+    }
+
+    public double getIntakeVelocity() {
+        return this.motorIntake.getVelocity();
+    }
+    public double getIntakeLiftVelocity() {
+        return this.motorIntakeLift.getVelocity();
+    }
+
+    public double getIntakePosition() {
+        return this.motorIntake.getCurrentPosition();
+    }
+    public double getIntakeLiftPosition() {
+        return this.motorIntakeLift.getCurrentPosition();
     }
 
 }

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Traject
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AutonomousTest", group="Autonomous")
-@Disabled
+//@Disabled
 public class AutonomousTest extends LinearOpMode {
 
     //////////////////////////////////////////////////////////////////////
@@ -71,23 +71,26 @@ public class AutonomousTest extends LinearOpMode {
 
         robot.resetAutonomousTimer();
         robot.getDriveTrain().setDriveTrainZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE );
+        robot.getGrabber().armDown();
 
         ///////////////////////////////////////
         // Start of program
         ///////////////////////////////////////
         Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
                 .setDefaultTargetPower( 0.40 )
-                .moveForward( 48 )
+                .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
                 .turnRight( 60 )
-                .moveBackward( 13 )
+                .moveForward( 3 )
                 .stop()
+                .moveBackward( 36 )
                 .turnRight( 180 )
-                .moveForward( 40 )
+                .moveForward( 21 )
                 .stop()
-                .turnLeft( 0 )
-                .moveForward( 48 )
+                .moveBackward( 21 )
+                .turnLeft( 60 )
+                .moveForward( 33 )
                 .build();
 
         robot.followTrajectory((trajectoryZoneA1));

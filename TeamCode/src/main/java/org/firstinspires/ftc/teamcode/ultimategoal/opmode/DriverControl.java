@@ -34,10 +34,18 @@ public class DriverControl extends LinearOpMode {
             telemetry.update();
         }
 
+        robot.getShooter().stopPoker();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             operateDriveTrain();
             operateControls();
+
+            telemetry.addData("Intake Velocity", robot.getIntake().getIntakeVelocity());
+            telemetry.addData("Intake Position", robot.getIntake().getIntakePosition());
+            telemetry.addData("Intake Lift Velocity", robot.getIntake().getIntakeLiftVelocity());
+            telemetry.addData("Intake Lift Position", robot.getIntake().getIntakeLiftPosition());
+            telemetry.addData("Shooter Velocity", robot.getShooter().getVelocity());
 
             telemetry.update();
         }
@@ -77,11 +85,10 @@ public class DriverControl extends LinearOpMode {
             robot.getGrabber().armDown();
         }
 
-        if (gamepad1.right_trigger > 0) {
+        if ((gamepad1.right_trigger > 0) || (gamepad2.right_trigger > 0)) {
             if (robot.getIntake().isBasketUp()) {
                 robot.getShooter().stopPoker();
-                robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
-                sleep(100);
+                robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
                 robot.getIntake().lowerBasket();
             }
             robot.getIntake().intake();
@@ -93,11 +100,13 @@ public class DriverControl extends LinearOpMode {
         }
 
         if (gamepad1.y) {
+            robot.getShooter().stopPoker();
             robot.getIntake().liftBasket();
             robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_1);
         } else if (gamepad1.b) {
+            robot.getShooter().stopPoker();
             robot.getIntake().lowerBasket();
-            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_OFF);
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
         }
 
         if (gamepad1.right_bumper ) {

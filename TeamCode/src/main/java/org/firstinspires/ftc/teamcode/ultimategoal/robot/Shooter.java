@@ -52,7 +52,7 @@ public class Shooter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void init() {
 
-        motorShooter = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorShooter");  // Configure the robot to use these 4 motor names,
+        motorShooter = robot.opMode.hardwareMap.get(DcMotorEx.class, "motorShooter");
         motorShooter.setDirection(DcMotor.Direction.FORWARD);
         motorShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -88,7 +88,7 @@ public class Shooter {
                 break;
 
             case SHOOTER_STATE_2:
-                motorShooter.setVelocity(100);
+                motorShooter.setVelocity(1000);
                 break;
 
             case SHOOTER_STATE_3:
@@ -132,6 +132,7 @@ public class Shooter {
 
     public void burstPoker() {
         // 3 to 1 gear ration is 33 milli
+        stopPoker();
         pushPoker();
         sleep(150);
         stopPoker();

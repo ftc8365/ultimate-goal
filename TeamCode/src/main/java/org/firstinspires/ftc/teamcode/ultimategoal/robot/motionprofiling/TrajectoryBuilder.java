@@ -21,6 +21,13 @@ public class TrajectoryBuilder {
         return this;
     }
 
+    public TrajectoryBuilder moveForward( double distanceInInches, double targetPower ) {
+        Constraint constraint = new Constraint();
+        constraint.setTargetPower( targetPower );
+        trajectory.getMotions().add( new Motion( Motion.Type.MOVE_FORWARD, distanceInInches, currentTargetHeading, constraint ) );
+        return this;
+    }
+
     public TrajectoryBuilder moveForward( double distanceInInches, Constraint constraint ) {
         trajectory.getMotions().add( new Motion( Motion.Type.MOVE_FORWARD, distanceInInches, currentTargetHeading, constraint ) );
         return this;

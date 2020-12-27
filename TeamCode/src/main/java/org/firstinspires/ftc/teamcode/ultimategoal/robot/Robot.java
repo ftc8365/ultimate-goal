@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ultimategoal.robot;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Motion;
@@ -79,6 +80,24 @@ public class Robot {
 
         return (opMode.opModeIsActive()) && (autonomusTimer.milliseconds() < AUTONOMOUS_DURATION_MSEC);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void setServoPosition(Servo servo, double targetPosition, int delay) {
+        double currentPos = servo.getPosition();
+
+        if (currentPos > targetPosition) {
+            while (servo.getPosition() > targetPosition) {
+                servo.setPosition(servo.getPosition() - 0.01);
+                opMode.sleep(delay);
+            }
+        } else if (currentPos < targetPosition) {
+            while (servo.getPosition() < targetPosition) {
+                servo.setPosition(servo.getPosition() + 0.01);
+                opMode.sleep(delay);
+            }
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public TrajectoryBuilder trajectoryBuilder() {
