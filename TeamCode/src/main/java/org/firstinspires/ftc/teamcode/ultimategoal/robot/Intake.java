@@ -68,10 +68,10 @@ public class Intake {
     }
 
     public void intake() {
-        motorIntake.setPower(0.25);
-        motorIntakeLift.setPower(0.45);
-//        motorIntake.setVelocity(480);
-//        motorIntakeLift.setVelocity(1280);
+//        motorIntake.setPower(0.35);
+//        motorIntakeLift.setPower(0.55);
+        motorIntake.setVelocity(680);
+        motorIntakeLift.setVelocity(1400);
     }
 
     public void outake() {

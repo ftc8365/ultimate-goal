@@ -87,14 +87,35 @@ public class Autonomous extends LinearOpMode {
         robot.getGrabber().armUp();
         robot.getShooter().stopPoker();
 
+        Trajectory trajectory;
+
         if (ringPatten.equals("Quad")) {
-            runAutoZoneC();
+            trajectory = runAutoZoneC();
         } else if (ringPatten.equals("Single")) {
-             runAutoZoneB();
+            trajectory = runAutoZoneB();
         } else {
-             runAutoZoneA();
+            trajectory = runAutoZoneA();
         }
 
+        robot.followTrajectory( trajectory );
+
+        robot.getShooter().burstPoker();
+
+        robot.resumeTrajectory( trajectory );
+
+        dropWobbleGoal();
+
+        robot.resumeTrajectory( trajectory );
+
+        sleep(500);
+        grabWobbleGoal();
+
+        robot.resumeTrajectory( trajectory );
+
+        dropWobbleGoal();
+
+        // Autonomous Complete
+        // stop robot and position for Driver Control
         robot.getGrabber().armUp();
         robot.getDriveTrain().stop();
         robot.getShooter().stop();
@@ -104,7 +125,7 @@ public class Autonomous extends LinearOpMode {
 
     public void dropWobbleGoal() {
          robot.getGrabber().armDown();
-         sleep(350);
+         sleep(500);
          robot.getGrabber().openGrabber();
          sleep(750);
     }
@@ -114,104 +135,75 @@ public class Autonomous extends LinearOpMode {
         robot.getGrabber().armUp();
     }
 
-    public void runAutoZoneA() {
-        Trajectory trajectoryZoneA1 = robot.trajectoryBuilder()
-                .setDefaultTargetPower( 0.50 )
+    public Trajectory runAutoZoneA() {
+        Trajectory trajectoryZoneA = robot.trajectoryBuilder()
+                .setDefaultTargetPower( 0.40 )
                 .moveForward( 60 )
-                .turnLeft( 340 )
+                .turnLeft( 345 )
                 .stop()
                 .turnRight( 60 )
-                .moveForward( 3 )
+                .moveForward( 8 )
                 .stop()
-                .moveBackward( 37 )
+                .moveBackward( 40 )
                 .turnRight( 180 )
-                .moveForward( 21, 30 )
+                .moveForward( 18, 0.20 )
                 .stop()
-                .moveBackward( 21 )
+                .moveBackward( 20 )
                 .turnLeft( 60 )
-                .moveForward( 33 )
+                .moveForward( 35 )
+                .turnRight(105)
                 .build();
 
-        robot.followTrajectory((trajectoryZoneA1));
-
-        robot.getShooter().burstPoker();
-
-        robot.resumeTrajectory((trajectoryZoneA1));
-
-        dropWobbleGoal();
-
-        robot.resumeTrajectory((trajectoryZoneA1));
-
-        grabWobbleGoal();
-
-        robot.resumeTrajectory((trajectoryZoneA1));
-
-        dropWobbleGoal();
+        return trajectoryZoneA;
     }
 
-    public void runAutoZoneB(){
+    public Trajectory runAutoZoneB() {
         Trajectory trajectoryZoneB = robot.trajectoryBuilder()
-                .setDefaultTargetPower( 0.50 )
-                .moveForward( 60 )
-                .turnLeft( 340 )
+                .setDefaultTargetPower(0.40)
+                .moveForward(60)
+                .turnLeft(345)
                 .stop()
-                .turnRight( 0 )
-                .moveForward( 24 )
+                .turnRight(0)
+                .moveForward(30)
                 .stop()
-                .moveBackward( 24 )
-                .turnRight( 60 )
-                .moveBackward( 34 )
-                .turnRight( 180 )
-                .moveForward( 21, 30 )
+                .moveBackward(30)
+                .turnRight(60)
+                .moveBackward(34)
+                .turnRight(180)
+                .moveForward(15, 0.20)
                 .stop()
-                .moveBackward( 21 )
-                .turnLeft( 60 )
-                .moveForward( 34 )
-                .turnLeft( 0 )
-                .moveForward( 24 )
+                .moveBackward(21)
+                .turnLeft(60)
+                .moveForward(32)
+                .turnLeft(0)
+                .moveForward(14)
                 .stop()
-                .moveBackward( 12 )
+                .moveBackward(14)
                 .build();
-
-        robot.followTrajectory((trajectoryZoneB));
-
-        robot.getShooter().burstPoker();
-
-        robot.resumeTrajectory((trajectoryZoneB));
-
-        dropWobbleGoal();
-
-        robot.resumeTrajectory((trajectoryZoneB));
-
-        grabWobbleGoal();
-
-        robot.resumeTrajectory((trajectoryZoneB));
+        return trajectoryZoneB;
     }
 
-    public void runAutoZoneC(){
+    public Trajectory runAutoZoneC(){
         Trajectory trajectoryZoneC = robot.trajectoryBuilder()
                 .setDefaultTargetPower( 0.40 )
                 .moveForward( 60 )
                 .turnLeft( 340 )
                 .stop()
                 .turnRight( 0 )
-                .moveForward( 24 )
-                .turnRight( 90 )
+                .moveForward( 40 )
+                .turnRight( 60 )
+                .moveForward(8)
                 .stop()
-                .moveBackward( 24 )
+                .moveBackward( 40 )
                 .turnRight( 180 )
-                .moveForward( 24 )
+                .moveForward(50)
+                .moveForward(10, 0.20)
                 .stop()
-                .moveBackward( 21 )
-                .turnLeft( 60 )
-                .moveForward( 33 )
+                .moveBackward( 40 )
+                .turnLeft( 75 )
+                .moveForward( 38 )
                 .build();
 
-        robot.followTrajectory((trajectoryZoneC));
-
-        robot.getShooter().burstPoker();
-
-        robot.resumeTrajectory((trajectoryZoneC));
-
+        return trajectoryZoneC;
     }
 }

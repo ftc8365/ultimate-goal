@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ultimategoal.robot.motionprofiling.Traject
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AutonomousTest", group="Autonomous")
-//@Disabled
+@Disabled
 public class AutonomousTest extends LinearOpMode {
 
     //////////////////////////////////////////////////////////////////////
