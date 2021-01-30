@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.ultimategoal.robot.*;
 public class DriverControl extends LinearOpMode {
     Robot robot = new Robot(this);
 
-    double DRIVE_NORMAL_POWER_RATIO = 0.50;
+    double DRIVE_NORMAL_POWER_RATIO = 0.8;
 //    double DRIVE_NORMAL_POWER_RATIO = 0.60;
     double DRIVE_LOW_POWER_RATIO    = 0.30;
     double TURN_NORMAL_POWER_RATIO  = 0.75;
@@ -85,7 +85,7 @@ public class DriverControl extends LinearOpMode {
             robot.getGrabber().armDown();
         }
 
-        if ((gamepad1.right_trigger > 0) || (gamepad2.right_trigger > 0)) {
+        if (gamepad1.right_trigger > 0) {
             if (robot.getIntake().isBasketUp()) {
                 robot.getShooter().stopPoker();
                 robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
@@ -128,6 +128,14 @@ public class DriverControl extends LinearOpMode {
 
         double drivePowerRatio = this.DRIVE_NORMAL_POWER_RATIO;
         double turnPowerRatio  = this.TURN_NORMAL_POWER_RATIO;
+
+        if(gamepad2.a){
+            robot.getIntake().dropIntake();
+        }
+
+        if(gamepad2.right_bumper){
+            robot.getShooter().setState(Shooter.ShooterState.SHOOTER_STATE_2);
+        }
 
         if (gamepad1.left_stick_button) {
             drivePowerRatio = this.DRIVE_LOW_POWER_RATIO;

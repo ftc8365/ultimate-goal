@@ -30,7 +30,6 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() {
         String ringPatten = "";
 
-
         // intialize robot submodules
         robot.getDriveTrain().init();
         robot.getGrabber().init();
@@ -114,12 +113,16 @@ public class Autonomous extends LinearOpMode {
 
         dropWobbleGoal();
 
+        robot.resumeTrajectory( trajectory );
+
         // Autonomous Complete
         // stop robot and position for Driver Control
         robot.getGrabber().armUp();
         robot.getDriveTrain().stop();
         robot.getShooter().stop();
         robot.getIntake().stop();
+        robot.getIntake().dropIntake();
+        robot.getIntake().lowerBasket();
 
     }
 
@@ -150,7 +153,7 @@ public class Autonomous extends LinearOpMode {
                 .stop()
                 .moveBackward( 20 )
                 .turnLeft( 60 )
-                .moveForward( 35 )
+                .moveForward( 33 )
                 .turnRight(105)
                 .build();
 
@@ -200,8 +203,10 @@ public class Autonomous extends LinearOpMode {
                 .moveForward(10, 0.20)
                 .stop()
                 .moveBackward( 40 )
-                .turnLeft( 75 )
-                .moveForward( 38 )
+                .turnLeft( 45 )
+                .moveForward( 40 )
+                .stop()
+                .moveBackward(17)
                 .build();
 
         return trajectoryZoneC;

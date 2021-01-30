@@ -29,6 +29,8 @@ public class Intake {
     // Declare servo variables
     ////////////////////////////////////////////////////////////////////////////////////
     Servo           servoBasketRight;
+    Servo           servoIntakeDropRight;
+    Servo           servoIntakeDropLeft;
 
     //////////////////////////////////////////
     // Declare reference to main robot
@@ -60,6 +62,10 @@ public class Intake {
         motorIntakeLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.servoBasketRight      = robot.opMode.hardwareMap.get(Servo.class, "servoBasketRight");
+        this.servoIntakeDropRight  = robot.opMode.hardwareMap.get(Servo.class, "servoIntakeDropRight");
+        this.servoIntakeDropLeft   = robot.opMode.hardwareMap.get(Servo.class, "servoIntakeDropLeft");
+
+
     }
 
     public void stop() {
@@ -80,7 +86,7 @@ public class Intake {
     }
 
     public void liftBasket() {
-        double pos = 0.780;
+        double pos = 0.680;
         basketUp = true;
         servoBasketRight.setPosition(pos);
     }
@@ -89,6 +95,11 @@ public class Intake {
         double pos = 0.07;
         basketUp = false;
         servoBasketRight.setPosition(pos);
+    }
+
+    public void dropIntake(){
+        double pos = 0.3;
+        servoIntakeDropLeft.setPosition(pos);
     }
 
     public boolean isBasketUp() {
