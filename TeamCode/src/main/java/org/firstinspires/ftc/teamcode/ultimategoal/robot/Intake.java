@@ -92,7 +92,7 @@ public class Intake {
     }
 
     public void lowerBasket() {
-        double pos = 0.07;
+        double pos = 0.05;
         basketUp = false;
         servoBasketRight.setPosition(pos);
     }

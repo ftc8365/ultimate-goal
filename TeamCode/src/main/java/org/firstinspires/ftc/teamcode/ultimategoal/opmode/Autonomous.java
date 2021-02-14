@@ -111,6 +111,11 @@ public class Autonomous extends LinearOpMode {
 
         robot.resumeTrajectory( trajectory );
 
+        robot.getIntake().dropIntake();
+        robot.getIntake().intake();
+
+        robot.resumeTrajectory(trajectory);
+
         dropWobbleGoal();
 
         robot.resumeTrajectory( trajectory );
@@ -167,22 +172,30 @@ public class Autonomous extends LinearOpMode {
                 .turnLeft(345)
                 .stop()
                 .turnRight(0)
-                .moveForward(30)
+                .moveForward(22)
                 .stop()
-                .moveBackward(30)
+                .moveBackward(22)
                 .turnRight(60)
                 .moveBackward(34)
                 .turnRight(180)
                 .moveForward(15, 0.20)
                 .stop()
-                .moveBackward(21)
+                .turnLeft(50)
+                .stop()
+                .moveForward(14)
+                .turnLeft(0)
+                .moveForward(30)
+
+
+
+          /*      .moveBackward(21)
                 .turnLeft(60)
                 .moveForward(32)
                 .turnLeft(0)
                 .moveForward(14)
                 .stop()
-                .moveBackward(14)
-                .build();
+                .moveBackward(6)
+            */    .build();
         return trajectoryZoneB;
     }
 
